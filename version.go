@@ -1,4 +1,4 @@
-package qxLib
+package rexLib
 
 import "embed"
 
