@@ -21,6 +21,6 @@ release:
 	[ -z "$$new_patch" ] && new_patch=0; \
 	new_version="v$${new_major:-0}.$${new_minor:-0}.$${new_patch:-0}"; \
 	echo "🎉 新版本号: $$new_version"; \
-	echo "$$new_version" > version;
-	git tag $$new_version;
-	git push origin $$new_version;
+	echo "$$new_version" > version; \
+	git tag "$$new_version"; \
+	git push origin tag "$$new_version"; \
