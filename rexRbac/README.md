@@ -1,0 +1,1 @@
+因为gorm-adapter引入的gorm.io/driver/sqlserver的包中引入了github.com/microsoft/go-mssqldb， 而github.com/microsoft/go-mssqldb存在严重问题，目前这个部分，不在提供维护，可以尝试考虑使用xorm实现，但是需要自己实现数据库连接。
