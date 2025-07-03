@@ -18,8 +18,8 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 		ctx := stream.Context()
 
 		result := &Resp{
-			Code: rexCodes.QxEngineStatusOK,
-			Msg:  rexCodes.StatusText(rexCodes.QxEngineStatusOK),
+			Code: rexCodes.EngineStatusOK,
+			Msg:  rexCodes.StatusText(rexCodes.EngineStatusOK),
 			Path: info.FullMethod,
 		}
 
@@ -28,9 +28,9 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 		// note: metadata中尝试获取requestId, 如果不存在就生成一个
 		tempMD, isExist := metadata.FromIncomingContext(ctx)
 		if !isExist {
-			result.Code = rexCodes.QxEngineStatusNotFoundMetadata
-			result.Msg = rexCodes.StatusText(rexCodes.QxEngineStatusNotFoundMetadata)
-			return errors.New(rexCodes.StatusText(rexCodes.QxEngineStatusNotFoundMetadata))
+			result.Code = rexCodes.EngineStatusNotFoundMetadata
+			result.Msg = rexCodes.StatusText(rexCodes.EngineStatusNotFoundMetadata)
+			return errors.New(rexCodes.StatusText(rexCodes.EngineStatusNotFoundMetadata))
 		}
 
 		requestId := tempMD.Get(rexCommonHeader.HeaderXRequestIDFor)
@@ -63,8 +63,8 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler) (any, error) {
 
 		result := &Resp{
-			Code: rexCodes.QxEngineStatusOK,
-			Msg:  rexCodes.StatusText(rexCodes.QxEngineStatusOK),
+			Code: rexCodes.EngineStatusOK,
+			Msg:  rexCodes.StatusText(rexCodes.EngineStatusOK),
 			Path: info.FullMethod,
 		}
 
@@ -73,8 +73,8 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 		// note: metadata中尝试获取requestId, 如果不存在就生成一个
 		tempMD, isExist := metadata.FromIncomingContext(ctx)
 		if !isExist {
-			result.Code = rexCodes.QxEngineStatusNotFoundMetadata
-			result.Msg = rexCodes.StatusText(rexCodes.QxEngineStatusNotFoundMetadata)
+			result.Code = rexCodes.EngineStatusNotFoundMetadata
+			result.Msg = rexCodes.StatusText(rexCodes.EngineStatusNotFoundMetadata)
 			return result, nil
 		}
 

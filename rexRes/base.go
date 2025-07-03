@@ -88,8 +88,8 @@ func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) Ba
 	}
 	var resp BaseResponse[any]
 	if err == nil {
-		resp.Code = rexCodes.QxEngineStatusOK
-		resp.Msg = rexCodes.StatusText(rexCodes.QxEngineStatusOK, rexCodes.LangEnUS)
+		resp.Code = rexCodes.EngineStatusOK
+		resp.Msg = rexCodes.StatusText(rexCodes.EngineStatusOK, rexCodes.LangEnUS)
 		resp.RequestId = requestID
 		resp.Path = path
 		resp.Data = res
@@ -120,14 +120,14 @@ func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) Ba
 			resp.Path = path
 			resp.Data = res
 		case error:
-			resp.Code = rexCodes.QxEngineStatusBadRequest
+			resp.Code = rexCodes.EngineStatusBadRequest
 			resp.Msg = data.Error()
 			resp.RequestId = requestID
 			resp.Path = path
 			resp.Data = res
 		default:
-			resp.Code = rexCodes.QxEngineStatusOK
-			resp.Msg = rexCodes.StatusText(rexCodes.QxEngineStatusOK, rexCodes.LangEnUS)
+			resp.Code = rexCodes.EngineStatusOK
+			resp.Msg = rexCodes.StatusText(rexCodes.EngineStatusOK, rexCodes.LangEnUS)
 			resp.RequestId = requestID
 			resp.Path = path
 			resp.Data = res

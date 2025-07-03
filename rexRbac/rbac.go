@@ -114,7 +114,6 @@ func InitRbac(RbacPath string, Db *gorm.DB, prefix, tableName string) (*casbin.E
 	if err != nil {
 		return nil, err
 	}
-
 	return e, nil
 }
 
