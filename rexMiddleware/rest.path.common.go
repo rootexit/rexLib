@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/google/uuid"
-	"github.com/rootexit/rexLib/rexCommonHeader"
+	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/logx"
 	"github.com/zeromicro/go-zero/rest/httpx"
@@ -50,7 +50,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 
 		requestID := uuid.NewString()
 		ctx = context.WithValue(ctx, CtxRequestID, requestID)
-		w.Header().Set(rexCommonHeader.HeaderXRequestIDFor, requestID)
+		w.Header().Set(rexHeaders.HeaderXRequestIDFor, requestID)
 
 		// 获取 User-Agent
 		userAgent := r.Header.Get(CtxUserAgent)

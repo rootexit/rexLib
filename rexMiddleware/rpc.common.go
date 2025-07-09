@@ -5,7 +5,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/rootexit/rexLib/rexCodes"
-	"github.com/rootexit/rexLib/rexCommonHeader"
+	"github.com/rootexit/rexLib/rexHeaders"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
 )
@@ -33,7 +33,7 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 			return errors.New(rexCodes.StatusText(rexCodes.EngineStatusNotFoundMetadata))
 		}
 
-		requestId := tempMD.Get(rexCommonHeader.HeaderXRequestIDFor)
+		requestId := tempMD.Get(rexHeaders.HeaderXRequestIDFor)
 		if len(requestId) > 0 {
 			ctx = context.WithValue(ctx, CtxRequestID, requestId[0])
 			result.RequestID = requestId[0]
@@ -44,12 +44,12 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 		}
 
 		//note: 读取metadata中的信息
-		xTenantIDFor := tempMD.Get(rexCommonHeader.HeaderXTenantIDFor)
+		xTenantIDFor := tempMD.Get(rexHeaders.HeaderXTenantIDFor)
 		if len(requestId) > 0 {
 			ctx = context.WithValue(ctx, CtxTenantId, xTenantIDFor[0])
 		}
 
-		xDomainIdFor := tempMD.Get(rexCommonHeader.HeaderXDomainIDFor)
+		xDomainIdFor := tempMD.Get(rexHeaders.HeaderXDomainIDFor)
 		if len(requestId) > 0 {
 			ctx = context.WithValue(ctx, CtxDomainId, xDomainIdFor[0])
 		}
@@ -78,7 +78,7 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 			return result, nil
 		}
 
-		requestId := tempMD.Get(rexCommonHeader.HeaderXRequestIDFor)
+		requestId := tempMD.Get(rexHeaders.HeaderXRequestIDFor)
 		if len(requestId) > 0 {
 			ctx = context.WithValue(ctx, CtxRequestID, requestId[0])
 			result.RequestID = requestId[0]
@@ -88,12 +88,12 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 			result.RequestID = tempRequestId
 		}
 
-		xTenantIDFor := tempMD.Get(rexCommonHeader.HeaderXTenantIDFor)
+		xTenantIDFor := tempMD.Get(rexHeaders.HeaderXTenantIDFor)
 		if len(requestId) > 0 {
 			ctx = context.WithValue(ctx, CtxTenantId, xTenantIDFor[0])
 		}
 
-		xDomainIdFor := tempMD.Get(rexCommonHeader.HeaderXDomainIDFor)
+		xDomainIdFor := tempMD.Get(rexHeaders.HeaderXDomainIDFor)
 		if len(requestId) > 0 {
 			ctx = context.WithValue(ctx, CtxDomainId, xDomainIdFor[0])
 		}

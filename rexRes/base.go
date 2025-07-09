@@ -5,8 +5,8 @@ import (
 	"github.com/aws/smithy-go/encoding/xml"
 	"github.com/google/uuid"
 	"github.com/rootexit/rexLib/rexCodes"
-	"github.com/rootexit/rexLib/rexCommonHeader"
 	"github.com/rootexit/rexLib/rexErrors"
+	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/rootexit/rexLib/rexMiddleware"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"google.golang.org/grpc/status"
@@ -74,7 +74,7 @@ func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) Ba
 	path := r.URL.Path
 	// note: 先从请求中获取
 	requestID := ""
-	xRequestIDFor := r.Header.Get(rexCommonHeader.HeaderXRequestIDFor)
+	xRequestIDFor := r.Header.Get(rexHeaders.HeaderXRequestIDFor)
 	if xRequestIDFor == "" {
 		// note: 再从上下文中获取
 		ctxRequestId := ctx.Value(rexMiddleware.CtxRequestID)
