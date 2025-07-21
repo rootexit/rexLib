@@ -5,6 +5,7 @@ import (
 	"errors"
 	"github.com/google/uuid"
 	"github.com/rootexit/rexLib/rexCodes"
+	"github.com/rootexit/rexLib/rexCtx"
 	"github.com/rootexit/rexLib/rexHeaders"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"
@@ -23,7 +24,7 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 			Path: info.FullMethod,
 		}
 
-		ctx = context.WithValue(ctx, CtxFullMethod, info.FullMethod)
+		ctx = context.WithValue(ctx, rexCtx.CtxFullMethod{}, info.FullMethod)
 
 		// note: metadata中尝试获取requestId, 如果不存在就生成一个
 		tempMD, isExist := metadata.FromIncomingContext(ctx)
@@ -35,23 +36,23 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 
 		requestId := tempMD.Get(rexHeaders.HeaderXRequestIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, CtxRequestID, requestId[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, requestId[0])
 			result.RequestID = requestId[0]
 		} else {
 			tempRequestId := uuid.NewString()
-			ctx = context.WithValue(ctx, CtxRequestID, tempRequestId)
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, tempRequestId)
 			result.RequestID = tempRequestId
 		}
 
 		//note: 读取metadata中的信息
 		xTenantIDFor := tempMD.Get(rexHeaders.HeaderXTenantIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, CtxTenantId, xTenantIDFor[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxTenantId{}, xTenantIDFor[0])
 		}
 
 		xDomainIdFor := tempMD.Get(rexHeaders.HeaderXDomainIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, CtxDomainId, xDomainIdFor[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxDomainId{}, xDomainIdFor[0])
 		}
 
 		return handler(svr, stream)
@@ -68,7 +69,7 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 			Path: info.FullMethod,
 		}
 
-		ctx = context.WithValue(ctx, CtxFullMethod, info.FullMethod)
+		ctx = context.WithValue(ctx, rexCtx.CtxFullMethod{}, info.FullMethod)
 
 		// note: metadata中尝试获取requestId, 如果不存在就生成一个
 		tempMD, isExist := metadata.FromIncomingContext(ctx)
@@ -80,22 +81,22 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 
 		requestId := tempMD.Get(rexHeaders.HeaderXRequestIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, CtxRequestID, requestId[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, requestId[0])
 			result.RequestID = requestId[0]
 		} else {
 			tempRequestId := uuid.NewString()
-			ctx = context.WithValue(ctx, CtxRequestID, tempRequestId)
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, tempRequestId)
 			result.RequestID = tempRequestId
 		}
 
 		xTenantIDFor := tempMD.Get(rexHeaders.HeaderXTenantIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, CtxTenantId, xTenantIDFor[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxTenantId{}, xTenantIDFor[0])
 		}
 
 		xDomainIdFor := tempMD.Get(rexHeaders.HeaderXDomainIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, CtxDomainId, xDomainIdFor[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxDomainId{}, xDomainIdFor[0])
 		}
 
 		return handler(ctx, req)
