@@ -10,4 +10,5 @@ const (
 
 	HeaderXTenantIDFor = "X-TenantId-For"
 	HeaderXDomainIDFor = "X-DomainId-For"
+	HeaderUserAgent    = "User-Agent"
 )

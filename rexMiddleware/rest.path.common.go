@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"github.com/google/uuid"
+	"github.com/rootexit/rexLib/rexCtx"
 	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/zeromicro/go-zero/core/logc"
 	"github.com/zeromicro/go-zero/core/logx"
@@ -24,9 +25,10 @@ func NewPathHttpInterceptorMiddleware() *PathHttpInterceptorMiddleware {
 func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		startTime := time.Now()
-		ctx := context.WithValue(r.Context(), CtxFullMethod, r.URL.Path)
-		ctx = context.WithValue(ctx, CtxRequestURI, r.RequestURI)
-		ctx = context.WithValue(ctx, CtxStartTime, startTime.UnixMilli())
+		ctx := context.WithValue(r.Context(), rexCtx.CtxFullMethod{}, r.URL.Path)
+		ctx = context.WithValue(ctx, rexCtx.CtxRequestURI{}, r.RequestURI)
+		ctx = context.WithValue(ctx, rexCtx.CtxStartTime{}, startTime.UnixMilli())
+
 		fullAddr := httpx.GetRemoteAddr(r)
 		logc.Infof(ctx, "fullAddr:%v", fullAddr)
 		ips := strings.Split(fullAddr, ",")
@@ -39,8 +41,8 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		}
 		logc.Infof(ctx, "realAddr: %s, ip: %s, port: %s, ipType: %s", realAddr, ip, port, ipType)
 
-		ctx = context.WithValue(ctx, CtxClientIp, ip)
-		ctx = context.WithValue(ctx, CtxClientPort, port)
+		ctx = context.WithValue(ctx, rexCtx.CtxClientIp{}, ip)
+		ctx = context.WithValue(ctx, rexCtx.CtxClientPort{}, port)
 		logc.Infof(ctx, "IP: %s, Port: %s", ip, port)
 		if err != nil {
 			logx.Infof("解析ip报错: %s", err)
@@ -49,12 +51,12 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		}
 
 		requestID := uuid.NewString()
-		ctx = context.WithValue(ctx, CtxRequestID, requestID)
+		ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, requestID)
 		w.Header().Set(rexHeaders.HeaderXRequestIDFor, requestID)
 
 		// 获取 User-Agent
-		userAgent := r.Header.Get(CtxUserAgent)
-		ctx = context.WithValue(ctx, CtxUserAgent, userAgent)
+		userAgent := r.Header.Get(rexHeaders.HeaderUserAgent)
+		ctx = context.WithValue(ctx, rexCtx.CtxUserAgent{}, userAgent)
 
 		endTime := time.Now()
 		logc.Infof(ctx, "路径ip处理中间件耗时: %v", endTime.Sub(startTime).Milliseconds())

@@ -1,11 +1,12 @@
-package rexMiddleware
+package rexCtx
 
 type (
-	CtxSiteDomain      struct{}
-	CtxStartTime       struct{}
-	CtxClientIp        struct{}
-	CtxClientPort      struct{}
-	CtxFullMethod      struct{}
+	CtxSiteDomain struct{}
+	CtxStartTime  struct{}
+	CtxClientIp   struct{}
+	CtxClientPort struct{}
+	CtxFullMethod struct{}
+
 	CtxRequestURI      struct{}
 	CtxRequestID       struct{}
 	CtxTenantId        struct{}
