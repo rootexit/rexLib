@@ -11,12 +11,14 @@ package rexDatabase
 
 import (
 	"database/sql"
+	"encoding/base64"
 	"fmt"
 	gomysql "github.com/go-sql-driver/mysql"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
 	"gorm.io/gorm/schema"
+	"log"
 	"net/url"
 	"strings"
 	"time"
@@ -40,10 +42,17 @@ type DbConfig struct {
 }
 
 func NewDbClient(c *DbConfig) (*gorm.DB, error) {
+	// note: 对密码进行base64解码
+	decodedBytes, err := base64.StdEncoding.DecodeString(c.Password)
+	if err != nil {
+		log.Fatalln("base64 decode error:", err)
+		return nil, err
+	}
+	realPassword := string(decodedBytes)
 	format := "%s:%s@tcp(%s:%d)/%s?charset=%s&parseTime=True&loc=%s"
 	dsn := fmt.Sprintf(format,
 		c.User,
-		c.Password,
+		realPassword,
 		c.Host,
 		c.Port,
 		c.DbName,

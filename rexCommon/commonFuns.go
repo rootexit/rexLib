@@ -9,7 +9,7 @@ import (
 	"errors"
 	"fmt"
 	"github.com/gin-gonic/gin"
-	validator "github.com/go-playground/validator/v10"
+	"github.com/go-playground/validator/v10"
 	"google.golang.org/grpc/peer"
 	"io"
 	"io/ioutil"
@@ -40,6 +40,14 @@ var (
 		Timeout: 30 * time.Second,
 	}
 )
+
+// 绝对值计算
+func AbsDuration(d time.Duration) time.Duration {
+	if d < 0 {
+		return -d
+	}
+	return d
+}
 
 func GetScheme(r *http.Request) string {
 	if r.TLS != nil {
