@@ -172,6 +172,7 @@ const (
 	BsStatusProcessing                        int32 = 10002 // 语义: 服务器已接收请求，但是仍然在处理中
 	BsStatusEarlyHints                        int32 = 10003 // 语义: 服务器提前发送头部信息（用于优化请求）
 	BsStatusAccountNotFound                   int32 = 10008 // 语义: 找不到该账号
+	BsStatusNotFoundMetadata                  int32 = 10014 // 语义: rpc请求缺少通讯元数据
 	BsStatusAccountOrPwdInvalid               int32 = 10019 // 语义: 账号或密码错误
 	BsStatusOK                                int32 = 20000 // 语义: 请求成功。
 	BsStatusCreated                           int32 = 20001 // 语义: 已创建。

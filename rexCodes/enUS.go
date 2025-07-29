@@ -163,6 +163,7 @@ var WrongMessageEnUS = map[int32]string{
 	BsStatusProcessing:                        "Processing",
 	BsStatusEarlyHints:                        "Early Hints",
 	BsStatusAccountNotFound:                   "account not found",
+	BsStatusNotFoundMetadata:                  "not found metadata",
 	BsStatusAccountOrPwdInvalid:               "account or password invalid",
 	BsStatusOK:                                "OK",
 	BsStatusCreated:                           "Created",

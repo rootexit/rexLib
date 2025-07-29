@@ -163,6 +163,7 @@ var WrongMessageZhCN = map[int32]string{
 	BsStatusProcessing:                        "服务器已接收请求，但是仍然在处理中",
 	BsStatusEarlyHints:                        "服务器提前发送头部信息（用于优化请求）",
 	BsStatusAccountNotFound:                   "找不到该账号",
+	BsStatusNotFoundMetadata:                  "rpc请求缺少通讯元数据",
 	BsStatusAccountOrPwdInvalid:               "账号或密码错误",
 	BsStatusOK:                                "请求成功。",
 	BsStatusCreated:                           "已创建。",
