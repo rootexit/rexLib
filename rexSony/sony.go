@@ -34,3 +34,11 @@ func TwitterSony(nodeCode int64) (string, error) {
 	}
 	return node.Generate().String(), nil
 }
+
+func TwitterSonyNode(nodeCode int64) (*snowflake.Node, error) {
+	node, err := snowflake.NewNode(nodeCode)
+	if err != nil {
+		return nil, err
+	}
+	return node, nil
+}
