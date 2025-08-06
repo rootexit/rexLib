@@ -10,6 +10,8 @@ replace golang.org/x/oauth2 => golang.org/x/oauth2 v0.30.0
 
 replace github.com/Azure/azure-sdk-for-go/sdk/azidentity => github.com/Azure/azure-sdk-for-go/sdk/azidentity v1.6.0
 
+replace gorm.io/plugin/dbresolver => gorm.io/plugin/dbresolver v1.6.0
+
 require (
 	github.com/aliyun/aliyun-oss-go-sdk v3.0.2+incompatible
 	github.com/aws/aws-sdk-go-v2 v1.36.3
@@ -39,7 +41,7 @@ require (
 	google.golang.org/protobuf v1.36.5
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/driver/postgres v1.5.11
-	gorm.io/gorm v1.25.12
+	gorm.io/gorm v1.30.0
 )
 
 require (
