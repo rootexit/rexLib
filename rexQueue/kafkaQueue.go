@@ -8,8 +8,8 @@ import (
 )
 
 type (
-	Queue interface {
-		WithAsyncProducerErrFunc(asyncProducerErrFunc func(err error)) *defaultQueue
+	KafkaQueue interface {
+		WithAsyncProducerErrFunc(asyncProducerErrFunc func(err error)) *defaultKafkaQueue
 		GetASyncProducer() sarama.AsyncProducer
 		GetSyncProducer() sarama.SyncProducer
 		GetConsumer() sarama.Consumer
@@ -27,7 +27,7 @@ type (
 		EasyAsyncSendMessage(topic, key, value string) (err error)
 		EasyAsyncSendMessageCtx(ctx context.Context, topic, key, value string) (err error)
 	}
-	defaultQueue struct {
+	defaultKafkaQueue struct {
 		conf                 *KafkaConfig
 		consumerMode         ConsumerMode
 		producerMode         ProducerMode
@@ -39,8 +39,8 @@ type (
 	}
 )
 
-func NewQueue(conf *KafkaConfig) (*defaultQueue, error) {
-	q := defaultQueue{
+func NewKafkaQueue(conf *KafkaConfig) (KafkaQueue, error) {
+	q := defaultKafkaQueue{
 		consumerMode: conf.ConsumerMode,
 		producerMode: conf.ProducerMode,
 		conf:         conf,
@@ -87,28 +87,28 @@ func NewQueue(conf *KafkaConfig) (*defaultQueue, error) {
 	return &q, nil
 }
 
-func (q *defaultQueue) WithAsyncProducerErrFunc(asyncProducerErrFunc func(err error)) *defaultQueue {
+func (q *defaultKafkaQueue) WithAsyncProducerErrFunc(asyncProducerErrFunc func(err error)) *defaultKafkaQueue {
 	q.asyncProducerErrFunc = asyncProducerErrFunc
 	return q
 }
 
-func (q *defaultQueue) GetASyncProducer() sarama.AsyncProducer {
+func (q *defaultKafkaQueue) GetASyncProducer() sarama.AsyncProducer {
 	return q.asyncProducer
 }
 
-func (q *defaultQueue) GetSyncProducer() sarama.SyncProducer {
+func (q *defaultKafkaQueue) GetSyncProducer() sarama.SyncProducer {
 	return q.syncProducer
 }
 
-func (q *defaultQueue) GetConsumer() sarama.Consumer {
+func (q *defaultKafkaQueue) GetConsumer() sarama.Consumer {
 	return q.consumer
 }
 
-func (q *defaultQueue) GetConsumerGroup() sarama.ConsumerGroup {
+func (q *defaultKafkaQueue) GetConsumerGroup() sarama.ConsumerGroup {
 	return q.consumerGroup
 }
 
-func (q *defaultQueue) Close() error {
+func (q *defaultKafkaQueue) Close() error {
 	if q.consumer != nil {
 		if err := q.consumer.Close(); err != nil {
 			return fmt.Errorf("关闭 consumer 失败: %w", err)
@@ -132,7 +132,7 @@ func (q *defaultQueue) Close() error {
 	return nil
 }
 
-func (q *defaultQueue) CatchAsyncErr(asyncProducerErrFunc func(err error)) {
+func (q *defaultKafkaQueue) CatchAsyncErr(asyncProducerErrFunc func(err error)) {
 	q.asyncProducerErrFunc = asyncProducerErrFunc
 	go func() {
 		for err := range q.asyncProducer.Errors() {
@@ -143,7 +143,7 @@ func (q *defaultQueue) CatchAsyncErr(asyncProducerErrFunc func(err error)) {
 	}()
 }
 
-func (q *defaultQueue) Consume(ctx context.Context, consumerGroup sarama.ConsumerGroup, topics []string, consumerGroupHandler sarama.ConsumerGroupHandler) {
+func (q *defaultKafkaQueue) Consume(ctx context.Context, consumerGroup sarama.ConsumerGroup, topics []string, consumerGroupHandler sarama.ConsumerGroupHandler) {
 	for {
 		if err := consumerGroup.Consume(ctx, topics, consumerGroupHandler); err != nil {
 			logc.Errorf(ctx, "Error consuming: %v", err)
@@ -156,7 +156,7 @@ func (q *defaultQueue) Consume(ctx context.Context, consumerGroup sarama.Consume
 	}
 }
 
-func (q *defaultQueue) EasyConsume(ctx context.Context, consumerGroup sarama.ConsumerGroup, topics []string, readMsgFunc func(msg *sarama.ConsumerMessage)) {
+func (q *defaultKafkaQueue) EasyConsume(ctx context.Context, consumerGroup sarama.ConsumerGroup, topics []string, readMsgFunc func(msg *sarama.ConsumerMessage)) {
 	for {
 		if err := consumerGroup.Consume(ctx, topics, &EasyConsumerGroupHandler{
 			readMsgFunc: readMsgFunc,
@@ -171,7 +171,7 @@ func (q *defaultQueue) EasyConsume(ctx context.Context, consumerGroup sarama.Con
 	}
 }
 
-func (q *defaultQueue) SyncSendMessage(msg *sarama.ProducerMessage) (partition int32, offset int64, err error) {
+func (q *defaultKafkaQueue) SyncSendMessage(msg *sarama.ProducerMessage) (partition int32, offset int64, err error) {
 	if q.syncProducer == nil {
 		return 0, 0, fmt.Errorf("sync producer 未初始化")
 	}
@@ -183,7 +183,7 @@ func (q *defaultQueue) SyncSendMessage(msg *sarama.ProducerMessage) (partition i
 	return partition, offset, nil
 }
 
-func (q *defaultQueue) SyncSendMessageCtx(ctx context.Context, msg *sarama.ProducerMessage) (partition int32, offset int64, err error) {
+func (q *defaultKafkaQueue) SyncSendMessageCtx(ctx context.Context, msg *sarama.ProducerMessage) (partition int32, offset int64, err error) {
 	done := make(chan error, 1)
 
 	go func() {
@@ -199,7 +199,7 @@ func (q *defaultQueue) SyncSendMessageCtx(ctx context.Context, msg *sarama.Produ
 	}
 }
 
-func (q *defaultQueue) EasySyncSendMessage(topic, key, value string) (partition int32, offset int64, err error) {
+func (q *defaultKafkaQueue) EasySyncSendMessage(topic, key, value string) (partition int32, offset int64, err error) {
 	return q.SyncSendMessage(&sarama.ProducerMessage{
 		Topic: topic,
 		Key:   sarama.StringEncoder(key),
@@ -207,7 +207,7 @@ func (q *defaultQueue) EasySyncSendMessage(topic, key, value string) (partition 
 	})
 }
 
-func (q *defaultQueue) EasySyncSendMessageCtx(ctx context.Context, topic, key, value string) (partition int32, offset int64, err error) {
+func (q *defaultKafkaQueue) EasySyncSendMessageCtx(ctx context.Context, topic, key, value string) (partition int32, offset int64, err error) {
 	done := make(chan error, 1)
 
 	go func() {
@@ -227,7 +227,7 @@ func (q *defaultQueue) EasySyncSendMessageCtx(ctx context.Context, topic, key, v
 	}
 }
 
-func (q *defaultQueue) AsyncSendMessage(msg *sarama.ProducerMessage) (err error) {
+func (q *defaultKafkaQueue) AsyncSendMessage(msg *sarama.ProducerMessage) (err error) {
 	if q.asyncProducer == nil {
 		return fmt.Errorf("async producer 未初始化")
 	}
@@ -235,7 +235,7 @@ func (q *defaultQueue) AsyncSendMessage(msg *sarama.ProducerMessage) (err error)
 	return nil
 }
 
-func (q *defaultQueue) AsyncSendMessageCtx(ctx context.Context, msg *sarama.ProducerMessage) (err error) {
+func (q *defaultKafkaQueue) AsyncSendMessageCtx(ctx context.Context, msg *sarama.ProducerMessage) (err error) {
 	if q.asyncProducer == nil {
 		return fmt.Errorf("async producer 未初始化")
 	}
@@ -247,7 +247,7 @@ func (q *defaultQueue) AsyncSendMessageCtx(ctx context.Context, msg *sarama.Prod
 	}
 }
 
-func (q *defaultQueue) EasyAsyncSendMessage(topic, key, value string) (err error) {
+func (q *defaultKafkaQueue) EasyAsyncSendMessage(topic, key, value string) (err error) {
 	if q.asyncProducer == nil {
 		return fmt.Errorf("async producer 未初始化")
 	}
@@ -259,7 +259,7 @@ func (q *defaultQueue) EasyAsyncSendMessage(topic, key, value string) (err error
 	return nil
 }
 
-func (q *defaultQueue) EasyAsyncSendMessageCtx(ctx context.Context, topic, key, value string) (err error) {
+func (q *defaultKafkaQueue) EasyAsyncSendMessageCtx(ctx context.Context, topic, key, value string) (err error) {
 	if q.asyncProducer == nil {
 		return fmt.Errorf("async producer 未初始化")
 	}
