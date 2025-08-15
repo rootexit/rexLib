@@ -8,7 +8,7 @@ type (
 	CtxFullMethod struct{}
 
 	CtxRequestURI      struct{}
-	CtxRequestID       struct{}
+	CtxRequestId       struct{}
 	CtxTenantId        struct{}
 	CtxTenants         struct{}
 	CtxDomainId        struct{}
