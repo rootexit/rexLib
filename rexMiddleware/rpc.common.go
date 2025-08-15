@@ -36,11 +36,11 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 
 		requestId := tempMD.Get(rexHeaders.HeaderXRequestIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, requestId[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, requestId[0])
 			result.RequestID = requestId[0]
 		} else {
 			tempRequestId := uuid.NewString()
-			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, tempRequestId)
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, tempRequestId)
 			result.RequestID = tempRequestId
 		}
 
@@ -81,11 +81,11 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 
 		requestId := tempMD.Get(rexHeaders.HeaderXRequestIDFor)
 		if len(requestId) > 0 {
-			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, requestId[0])
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, requestId[0])
 			result.RequestID = requestId[0]
 		} else {
 			tempRequestId := uuid.NewString()
-			ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, tempRequestId)
+			ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, tempRequestId)
 			result.RequestID = tempRequestId
 		}
 

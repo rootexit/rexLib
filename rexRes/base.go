@@ -77,7 +77,7 @@ func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) Ba
 	xRequestIDFor := r.Header.Get(rexHeaders.HeaderXRequestIDFor)
 	if xRequestIDFor == "" {
 		// note: 再从上下文中获取
-		ctxRequestId := ctx.Value(rexCtx.CtxRequestID{})
+		ctxRequestId := ctx.Value(rexCtx.CtxRequestId{})
 		if ctxRequestId == nil {
 			requestID = uuid.NewString()
 		} else {

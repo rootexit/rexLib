@@ -51,7 +51,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		}
 
 		requestID := uuid.NewString()
-		ctx = context.WithValue(ctx, rexCtx.CtxRequestID{}, requestID)
+		ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, requestID)
 		w.Header().Set(rexHeaders.HeaderXRequestIDFor, requestID)
 
 		// 获取 User-Agent
