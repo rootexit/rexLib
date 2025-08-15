@@ -224,7 +224,7 @@ func CopyFile(src, des string) (written int64, err error) {
 func MakeDir(dir string) error {
 	if !FileIsExisted(dir) {
 		if err := os.MkdirAll(dir, 0777); err != nil { //os.ModePerm
-			log.Printf("MakeDir failed:", err)
+			log.Printf("MakeDir failed: %s", err)
 			return err
 		}
 	}

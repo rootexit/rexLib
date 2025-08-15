@@ -187,6 +187,45 @@ func FlatToNested(input map[string]interface{}) map[string]interface{} {
 	return nested
 }
 
+// MaskEmail 对邮箱做打码：保留 @ 及其后完整域名，@ 前只保留首尾字符，其余用 * 替换。
+// 规则：
+// - 长度 >= 3：保留首尾，中间全部 *   (e.g. "alice" -> "a***e")
+// - 长度 == 2：保留首字符，第二个改为 * (e.g. "ab" -> "a*")
+// - 长度 == 1：改为 "*"                 (e.g. "a" -> "*")
+// - 无效邮箱（没有 @）原样返回。
+func MaskEmail(email string) string {
+	at := strings.LastIndex(email, "@")
+	if at <= 0 || at == len(email)-1 { // 没有 @、在首位、或没有域名 -> 原样返回
+		return email
+	}
+
+	local := email[:at]
+	domain := email[at:] // 包含 @
+
+	// 转 runes，兼容多字节字符
+	runes := []rune(local)
+	n := len(runes)
+
+	switch n {
+	case 0:
+		// 空本地部分（极端情况），原样返回
+		return email
+	case 1:
+		return "*" + domain
+	case 2:
+		return string(runes[0]) + "*" + domain
+	default:
+		// n >= 3
+		masked := make([]rune, n)
+		masked[0] = runes[0]
+		for i := 1; i < n-1; i++ {
+			masked[i] = '*'
+		}
+		masked[n-1] = runes[n-1]
+		return string(masked) + domain
+	}
+}
+
 func MaskPhoneWithRegex(phone string) string {
 	// 匹配区号的正则：支持 "+数字 " 格式
 	re := regexp.MustCompile(`^\+[\d]+\s`)
