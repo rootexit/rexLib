@@ -6,7 +6,7 @@ const (
 	HeaderXAccountFor    = "X-Account-For"
 	HeaderXAccessKeyFor  = "X-AccessKey-For"
 	HeaderXSessionIdFor  = "X-SessionId-For"
-	HeaderXRequestIDFor  = "X-RequestID-For"
+	HeaderXRequestIDFor  = "X-RequestId-For"
 
 	HeaderXAdminIDFor  = "X-AdminID-For"
 	HeaderXUserIDFor   = "X-UserId-For"
