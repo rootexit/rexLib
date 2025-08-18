@@ -10,6 +10,7 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/peer"
 	"io"
 	"io/ioutil"
@@ -40,6 +41,59 @@ var (
 		Timeout: 30 * time.Second,
 	}
 )
+
+// note: 解析ip，端口，ip类型
+func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
+	ip = ""
+	port = ""
+	ipType = "IPv4"
+	// note: 先判断是否是 IPv6
+	if strings.Count(ipStr, ":") > 1 {
+		if strings.Contains(ipStr, "[") {
+			// note: ipv6带端口
+			host, p, err := net.SplitHostPort(ipStr)
+			if err != nil {
+				logx.Errorf("❌ 无效的带端口 IPv6:", err)
+				return ip, port, ipType, err
+			}
+			ip = host
+			port = p
+		} else {
+			ip = ipStr
+			port = ""
+		}
+	} else {
+		// note: 判断不是ipv4
+		if strings.Contains(ipStr, ":") {
+			host, p, err := net.SplitHostPort(ipStr)
+			if err != nil {
+				logx.Errorf("❌ 无效的带端口 IPv6:", err)
+				return ip, port, ipType, err
+			}
+			ip = host
+			port = p
+		} else {
+			// 纯 IP，无端口
+			ip = ipStr
+			port = ""
+		}
+	}
+
+	// 解析 IP
+	netIp := net.ParseIP(strings.Trim(ip, "[]"))
+	if netIp == nil {
+		logx.Errorf("❌ 无效的 IP 地址")
+		return ip, port, ipType, errors.New("unknown ip format")
+	}
+	// 类型判断
+	if netIp.To4() != nil {
+		ipType = "IPv4"
+		return ip, port, ipType, nil
+	} else {
+		ipType = "IPv6"
+		return ip, port, ipType, nil
+	}
+}
 
 // 绝对值计算
 func AbsDuration(d time.Duration) time.Duration {
