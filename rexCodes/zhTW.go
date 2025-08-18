@@ -1,6 +1,7 @@
 package rexCodes
 
 var WrongMessageZhTW = map[int32]string{
+	OK:                                        "请求成功。",
 	StatusContinue:                            "继续。",
 	StatusSwitchingProtocols:                  "服务器同意客户段的协议升级请求",
 	StatusProcessing:                          "服务器已接收请求，但是仍然在处理中",

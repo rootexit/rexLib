@@ -19,8 +19,8 @@ func StreamHeaderParseInterceptor() grpc.StreamServerInterceptor {
 		ctx := stream.Context()
 
 		result := &Resp{
-			Code: rexCodes.EngineStatusOK,
-			Msg:  rexCodes.StatusText(rexCodes.EngineStatusOK),
+			Code: rexCodes.OK,
+			Msg:  rexCodes.StatusText(rexCodes.OK),
 			Path: info.FullMethod,
 		}
 
@@ -64,8 +64,8 @@ func UnaryHeaderParseInterceptor() grpc.UnaryServerInterceptor {
 		handler grpc.UnaryHandler) (any, error) {
 
 		result := &Resp{
-			Code: rexCodes.EngineStatusOK,
-			Msg:  rexCodes.StatusText(rexCodes.EngineStatusOK),
+			Code: rexCodes.OK,
+			Msg:  rexCodes.StatusText(rexCodes.OK),
 			Path: info.FullMethod,
 		}
 

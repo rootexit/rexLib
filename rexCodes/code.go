@@ -10,6 +10,7 @@ package rexCodes
 // note: 补充服务器错误 5000～5999
 
 const (
+	OK                                        int32 = 0     // 语义: 请求成功。
 	StatusContinue                            int32 = 100   // 语义: 继续。
 	StatusSwitchingProtocols                  int32 = 101   // 语义: 服务器同意客户段的协议升级请求
 	StatusProcessing                          int32 = 102   // 语义: 服务器已接收请求，但是仍然在处理中

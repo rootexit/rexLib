@@ -73,24 +73,24 @@ func wrapXmlBaseResponse(ctx context.Context, r *http.Request, res any, err any)
 func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) BaseResponse[any] {
 	path := r.URL.Path
 	// note: 先从请求中获取
-	requestID := ""
+	requestId := ""
 	xRequestIDFor := r.Header.Get(rexHeaders.HeaderXRequestIDFor)
 	if xRequestIDFor == "" {
 		// note: 再从上下文中获取
 		ctxRequestId := ctx.Value(rexCtx.CtxRequestId{})
 		if ctxRequestId == nil {
-			requestID = uuid.NewString()
+			requestId = uuid.NewString()
 		} else {
-			requestID = ctxRequestId.(string)
+			requestId = ctxRequestId.(string)
 		}
 	} else {
-		requestID = xRequestIDFor
+		requestId = xRequestIDFor
 	}
 	var resp BaseResponse[any]
 	if err == nil {
-		resp.Code = rexCodes.EngineStatusOK
-		resp.Msg = rexCodes.StatusText(rexCodes.EngineStatusOK, rexCodes.LangEnUS)
-		resp.RequestId = requestID
+		resp.Code = rexCodes.OK
+		resp.Msg = rexCodes.StatusText(rexCodes.OK, rexCodes.LangEnUS)
+		resp.RequestId = requestId
 		resp.Path = path
 		resp.Data = res
 	} else {
@@ -98,37 +98,37 @@ func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) Ba
 		case *rexErrors.CodeMsg:
 			resp.Code = data.Code
 			resp.Msg = data.Msg
-			resp.RequestId = requestID
+			resp.RequestId = requestId
 			resp.Path = path
 			resp.Data = res
 		case rexErrors.CodeMsg:
 			resp.Code = data.Code
 			resp.Msg = data.Msg
-			resp.RequestId = requestID
+			resp.RequestId = requestId
 			resp.Path = path
 			resp.Data = res
 		case *status.Status:
 			resp.Code = int32(data.Code())
 			resp.Msg = data.Message()
-			resp.RequestId = requestID
+			resp.RequestId = requestId
 			resp.Path = path
 			resp.Data = res
 		case interface{ GRPCStatus() *status.Status }:
 			resp.Code = int32(data.GRPCStatus().Code())
 			resp.Msg = data.GRPCStatus().Message()
-			resp.RequestId = requestID
+			resp.RequestId = requestId
 			resp.Path = path
 			resp.Data = res
 		case error:
 			resp.Code = rexCodes.EngineStatusBadRequest
 			resp.Msg = data.Error()
-			resp.RequestId = requestID
+			resp.RequestId = requestId
 			resp.Path = path
 			resp.Data = res
 		default:
-			resp.Code = rexCodes.EngineStatusOK
-			resp.Msg = rexCodes.StatusText(rexCodes.EngineStatusOK, rexCodes.LangEnUS)
-			resp.RequestId = requestID
+			resp.Code = rexCodes.OK
+			resp.Msg = rexCodes.StatusText(rexCodes.OK, rexCodes.LangEnUS)
+			resp.RequestId = requestId
 			resp.Path = path
 			resp.Data = res
 		}
