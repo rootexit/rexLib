@@ -1,6 +1,7 @@
 package rexCodes
 
 var WrongMessageEnUS = map[int32]string{
+	FAIL:                                      "FAIL",
 	OK:                                        "OK",
 	StatusContinue:                            "Continue",
 	StatusSwitchingProtocols:                  "Switching Protocols",

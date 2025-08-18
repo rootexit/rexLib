@@ -1,6 +1,7 @@
 package rexCodes
 
 var WrongMessageZhCN = map[int32]string{
+	FAIL:                                      "失败",
 	OK:                                        "请求成功。",
 	StatusContinue:                            "继续。",
 	StatusSwitchingProtocols:                  "服务器同意客户段的协议升级请求",
