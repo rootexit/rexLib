@@ -84,7 +84,6 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 			rexHeaders.HeaderAuthorization:  "",
 			rexHeaders.HeaderUserAgent:      "",
 			"X-Amzn-Trace-Id":               "",
-			rexHeaders.HeaderXRequestIDFor:  "",
 			rexHeaders.HeaderAcceptEncoding: "",
 			rexHeaders.HeaderConnection:     "",
 			rexHeaders.HeaderContentLength:  "",
