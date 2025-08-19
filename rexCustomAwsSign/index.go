@@ -38,15 +38,22 @@ var ignoredHeaders = map[string]string{
 	rexHeaders.HeaderXRequestIDFor: "",
 }
 
+func BuildSignature(Region, ServiceName, SecretAccessKey, stringToSign string, Time time.Time) string {
+	creds := DeriveSigningKey(Region, ServiceName, SecretAccessKey, Time)
+	signature := HmacSHA256(creds, []byte(stringToSign))
+	signatureHex := hex.EncodeToString(signature)
+	return signatureHex
+}
+
 func DeriveSigningKey(region, service, secretKey string, dt time.Time) []byte {
-	kDate := hmacSHA256([]byte(DeriveKeyPrefix+secretKey), []byte(FormatShortTime(dt)))
-	kRegion := hmacSHA256(kDate, []byte(region))
-	kService := hmacSHA256(kRegion, []byte(service))
-	signingKey := hmacSHA256(kService, []byte(rexV1Request))
+	kDate := HmacSHA256([]byte(DeriveKeyPrefix+secretKey), []byte(FormatShortTime(dt)))
+	kRegion := HmacSHA256(kDate, []byte(region))
+	kService := HmacSHA256(kRegion, []byte(service))
+	signingKey := HmacSHA256(kService, []byte(rexV1Request))
 	return signingKey
 }
 
-func hmacSHA256(key []byte, data []byte) []byte {
+func HmacSHA256(key []byte, data []byte) []byte {
 	hash := hmac.New(sha256.New, key)
 	hash.Write(data)
 	return hash.Sum(nil)
@@ -58,14 +65,14 @@ func FormatDate(now time.Time) string {
 
 func Sha256Content(bodyBytes []byte) (contentSha256 string) {
 	if len(bodyBytes) != 0 {
-		calculatedSha256 := hex.EncodeToString(hashSHA256(bodyBytes))
+		calculatedSha256 := hex.EncodeToString(HashSHA256(bodyBytes))
 		return calculatedSha256
 	} else {
 		return EmptyStringSHA256
 	}
 }
 
-func hashSHA256(data []byte) []byte {
+func HashSHA256(data []byte) []byte {
 	hash := sha256.New()
 	hash.Write(data)
 	return hash.Sum(nil)
@@ -210,7 +217,7 @@ func BuildStringToSign(reqTime, credentialString, canonicalString string) string
 		authHeaderPrefix,
 		reqTime,
 		credentialString,
-		hex.EncodeToString(hashSHA256([]byte(canonicalString))),
+		hex.EncodeToString(HashSHA256([]byte(canonicalString))),
 	}, "\n")
 	return stringToSign
 }
