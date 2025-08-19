@@ -2,6 +2,7 @@ package rexHeaders
 
 const (
 	HeaderAuthorization  = "Authorization"
+	HeaderHost           = "Host"
 	HeaderXAuthMethodFor = "X-AuthMethod-For"
 	HeaderXAccountFor    = "X-Account-For"
 	HeaderXAccessKeyFor  = "X-AccessKey-For"
@@ -15,4 +16,8 @@ const (
 	HeaderXRequestIDFor = "X-RequestId-For"
 	HeaderXForwardedFor = "X-Forwarded-For"
 	HeaderUserAgent     = "User-Agent"
+
+	// note: 模仿aws签名算法实现的头
+	HeaderXRExDate          = "X-REx-Date"
+	HeaderXRExContentSha256 = "X-REx-Content-Sha256"
 )
