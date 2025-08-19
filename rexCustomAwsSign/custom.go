@@ -12,10 +12,16 @@ import (
 	"time"
 )
 
+/*
+	note: 这个签名部分主要是借鉴aws的V4签名，相关文档可以访问，我愿称之为《伟大的杰作》
+	https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv-create-signed-request.html
+*/
+
 type (
 	CustomSigner interface {
 		WithMaxSkew(maxSkew time.Duration)
 		WithIgnoredHeaders(IgnoredHeaders map[string]string)
+		WithNeedSignHeaders(NeedSignHeaders map[string]string)
 		GetDeriveKeyPrefix() string
 		GetTimeFormat() string
 		GetAuthHeaderPrefix() string
@@ -28,6 +34,7 @@ type (
 		GetHeaderDate() string
 		GetHeaderContentSha256() string
 		GetIgnoredHeaders() map[string]string
+		GetNeedSignHeaders() map[string]string
 		SignAuth(accessKeyID, credentialString, signedHeaders, signature string) string
 		BuildSignature(Region, ServiceName, SecretAccessKey, stringToSign string, Time time.Time) string
 		DeriveSigningKey(region, service, secretKey string, dt time.Time) []byte
@@ -56,6 +63,7 @@ type (
 		HeaderDate              string
 		HeaderContentSha256     string
 		IgnoredHeaders          map[string]string
+		NeedSignHeaders         map[string]string
 	}
 )
 
@@ -73,10 +81,24 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 		HeaderDate:              fmt.Sprintf("X-%s-Date", shortName),
 		HeaderContentSha256:     fmt.Sprintf("X-%s-Content-Sha256", shortName),
 		IgnoredHeaders: map[string]string{
-			rexHeaders.HeaderAuthorization: "",
-			rexHeaders.HeaderUserAgent:     "",
-			"X-Amzn-Trace-Id":              "",
-			rexHeaders.HeaderXRequestIDFor: "",
+			rexHeaders.HeaderAuthorization:  "",
+			rexHeaders.HeaderUserAgent:      "",
+			"X-Amzn-Trace-Id":               "",
+			rexHeaders.HeaderXRequestIDFor:  "",
+			rexHeaders.HeaderAcceptEncoding: "",
+			rexHeaders.HeaderConnection:     "",
+			rexHeaders.HeaderContentLength:  "",
+			rexHeaders.HeaderAccept:         "",
+		},
+		NeedSignHeaders: map[string]string{
+			rexHeaders.HeaderAuthorization:  "",
+			rexHeaders.HeaderUserAgent:      "",
+			"X-Amzn-Trace-Id":               "",
+			rexHeaders.HeaderXRequestIDFor:  "",
+			rexHeaders.HeaderAcceptEncoding: "",
+			rexHeaders.HeaderConnection:     "",
+			rexHeaders.HeaderContentLength:  "",
+			rexHeaders.HeaderAccept:         "",
 		},
 	}
 }
@@ -87,6 +109,10 @@ func (s *customSigner) WithMaxSkew(maxSkew time.Duration) {
 
 func (s *customSigner) WithIgnoredHeaders(IgnoredHeaders map[string]string) {
 	s.IgnoredHeaders = IgnoredHeaders
+}
+
+func (s *customSigner) WithNeedSignHeaders(NeedSignHeaders map[string]string) {
+	s.NeedSignHeaders = NeedSignHeaders
 }
 
 func (s *customSigner) GetDeriveKeyPrefix() string {
@@ -135,6 +161,10 @@ func (s *customSigner) GetHeaderContentSha256() string {
 
 func (s *customSigner) GetIgnoredHeaders() map[string]string {
 	return s.IgnoredHeaders
+}
+
+func (s *customSigner) GetNeedSignHeaders() map[string]string {
+	return s.NeedSignHeaders
 }
 
 func (s *customSigner) SignAuth(accessKeyID, credentialString, signedHeaders, signature string) string {
@@ -189,7 +219,7 @@ func (s *customSigner) HashSHA256(data []byte) []byte {
 func (s *customSigner) BuildCanonicalHeaders(r *http.Request) (canonicalHeaders string, signedHeaderStr string) {
 	var headers []string
 	var signedHeaders []string
-	for k := range r.Header {
+	for k := range s.NeedSignHeaders {
 		signedHeaders = append(signedHeaders, strings.ToLower(k))
 	}
 	headers = append(headers, strings.ToLower(rexHeaders.HeaderHost))
