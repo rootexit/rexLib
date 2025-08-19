@@ -6,11 +6,13 @@ const (
 	HeaderXAccountFor    = "X-Account-For"
 	HeaderXAccessKeyFor  = "X-AccessKey-For"
 	HeaderXSessionIdFor  = "X-SessionId-For"
-	HeaderXRequestIDFor  = "X-RequestId-For"
 
 	HeaderXAdminIDFor  = "X-AdminID-For"
 	HeaderXUserIDFor   = "X-UserId-For"
 	HeaderXTenantIDFor = "X-TenantId-For"
 	HeaderXDomainIDFor = "X-DomainId-For"
-	HeaderUserAgent    = "User-Agent"
+
+	HeaderXRequestIDFor = "X-RequestId-For"
+	HeaderXForwardedFor = "X-Forwarded-For"
+	HeaderUserAgent     = "User-Agent"
 )

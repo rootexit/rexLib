@@ -17,7 +17,7 @@ const (
 type Cors struct {
 	AllowedOrigins  []string `json:",default=[http://localhost:8888]"`
 	AllowMethods    []string `json:",default=[GET,POST]"`
-	AllowHeaders    []string `json:",default=[Content-Type,Origin,X-CSRF-Token,Authorization,X-Request-ID,Host,X-Amz-Content-Sha256,X-Amz-Date,Range]"`
+	AllowHeaders    []string `json:",default=[Content-Type,Origin,X-CSRF-Token,Authorization,X-Request-ID,Host,X-Lil-Content-Sha256,X-Lil-Date,X-Amz-Content-Sha256,X-Amz-Date,Range]"`
 	ExposeHeaders   []string `json:",default=[Content-Length,Access-Control-Allow-Origin,Access-Control-Allow-Headers]"`
 	MaxAgeHeaderVal int64    `json:",default=86400"`
 }
