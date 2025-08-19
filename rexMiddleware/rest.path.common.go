@@ -50,7 +50,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 			return
 		}
 
-		requestID := r.Header.Get(rexHeaders.HeaderXRequestIDFor)
+		requestID := r.Header.Get(rexHeaders.HeaderXRequestIdFor)
 		if requestID != "" {
 			// 如果请求头中有 HeaderXRequestIDFor，则使用它
 			logc.Infof(ctx, "使用HeaderXRequestIDFor: %s", requestID)
@@ -61,7 +61,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		}
 
 		ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, requestID)
-		w.Header().Set(rexHeaders.HeaderXRequestIDFor, requestID)
+		w.Header().Set(rexHeaders.HeaderXRequestIdFor, requestID)
 
 		// 获取 User-Agent
 		userAgent := r.Header.Get(rexHeaders.HeaderUserAgent)

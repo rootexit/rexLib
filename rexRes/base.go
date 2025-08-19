@@ -74,7 +74,7 @@ func wrapBaseResponse(ctx context.Context, r *http.Request, res any, err any) Ba
 	path := r.URL.Path
 	// note: 先从请求中获取
 	requestId := ""
-	xRequestIDFor := r.Header.Get(rexHeaders.HeaderXRequestIDFor)
+	xRequestIDFor := r.Header.Get(rexHeaders.HeaderXRequestIdFor)
 	if xRequestIDFor == "" {
 		// note: 再从上下文中获取
 		ctxRequestId := ctx.Value(rexCtx.CtxRequestId{})

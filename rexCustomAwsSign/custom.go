@@ -125,7 +125,7 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 				rexHeaders.HeaderAccept:         "",
 			},
 			NeedSignHeaders: map[string]string{
-				rexHeaders.HeaderXRequestIDFor: "",
+				rexHeaders.HeaderXRequestIdFor: "",
 				rexHeaders.HeaderContentType:   "",
 				tmpHeaderDate:                  "",
 				tmpHeaderDate:                  "",
