@@ -94,10 +94,7 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 				rexHeaders.HeaderContentLength:  "",
 				rexHeaders.HeaderAccept:         "",
 			},
-			NeedSignHeaders: map[string]string{
-				"X-Amz-Date":           "",
-				"X-Amz-Content-Sha256": "",
-			},
+			NeedSignHeaders: map[string]string{},
 		}
 	} else {
 		tmpHeaderDate := fmt.Sprintf("X-%s-Date", shortName)
@@ -124,12 +121,7 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 				rexHeaders.HeaderContentLength:  "",
 				rexHeaders.HeaderAccept:         "",
 			},
-			NeedSignHeaders: map[string]string{
-				rexHeaders.HeaderXRequestIdFor: "",
-				rexHeaders.HeaderContentType:   "",
-				tmpHeaderDate:                  "",
-				tmpHeaderDate:                  "",
-			},
+			NeedSignHeaders: map[string]string{},
 		}
 	}
 }
@@ -278,8 +270,14 @@ func (s *customSigner) HashSHA256(data []byte) []byte {
 func (s *customSigner) BuildCanonicalHeaders(r *http.Request) (canonicalHeaders string, signedHeaderStr string) {
 	var headers []string
 	var signedHeaders []string
-	for k := range r.Header {
-		signedHeaders = append(signedHeaders, strings.ToLower(k))
+	if len(s.NeedSignHeaders) > 0 {
+		for k := range s.NeedSignHeaders {
+			signedHeaders = append(signedHeaders, strings.ToLower(k))
+		}
+	} else {
+		for k := range r.Header {
+			signedHeaders = append(signedHeaders, strings.ToLower(k))
+		}
 	}
 	headers = append(headers, strings.ToLower(rexHeaders.HeaderHost))
 	signedHeaderVals := make(http.Header)
