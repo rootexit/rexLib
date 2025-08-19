@@ -14,6 +14,20 @@ import (
 
 type (
 	CustomSigner interface {
+		WithMaxSkew(maxSkew time.Duration)
+		WithIgnoredHeaders(IgnoredHeaders map[string]string)
+		GetDeriveKeyPrefix() string
+		GetTimeFormat() string
+		GetAuthHeaderPrefix() string
+		GetShortTimeFormat() string
+		GetVersionRequest() string
+		GetEmptyStringSHA256() string
+		GetMaxSkew() time.Duration
+		GetDoubleSpace() string
+		GetAuthHeaderSignatureElem() string
+		GetHeaderDate() string
+		GetHeaderContentSha256() string
+		GetIgnoredHeaders() map[string]string
 		SignAuth(accessKeyID, credentialString, signedHeaders, signature string) string
 		BuildSignature(Region, ServiceName, SecretAccessKey, stringToSign string, Time time.Time) string
 		DeriveSigningKey(region, service, secretKey string, dt time.Time) []byte
@@ -73,6 +87,54 @@ func (s *customSigner) WithMaxSkew(maxSkew time.Duration) {
 
 func (s *customSigner) WithIgnoredHeaders(IgnoredHeaders map[string]string) {
 	s.IgnoredHeaders = IgnoredHeaders
+}
+
+func (s *customSigner) GetDeriveKeyPrefix() string {
+	return s.DeriveKeyPrefix
+}
+
+func (s *customSigner) GetTimeFormat() string {
+	return s.TimeFormat
+}
+
+func (s *customSigner) GetAuthHeaderPrefix() string {
+	return s.AuthHeaderPrefix
+}
+
+func (s *customSigner) GetShortTimeFormat() string {
+	return s.ShortTimeFormat
+}
+
+func (s *customSigner) GetVersionRequest() string {
+	return s.VersionRequest
+}
+
+func (s *customSigner) GetEmptyStringSHA256() string {
+	return s.EmptyStringSHA256
+}
+
+func (s *customSigner) GetMaxSkew() time.Duration {
+	return s.MaxSkew
+}
+
+func (s *customSigner) GetDoubleSpace() string {
+	return s.DoubleSpace
+}
+
+func (s *customSigner) GetAuthHeaderSignatureElem() string {
+	return s.AuthHeaderSignatureElem
+}
+
+func (s *customSigner) GetHeaderDate() string {
+	return s.HeaderDate
+}
+
+func (s *customSigner) GetHeaderContentSha256() string {
+	return s.HeaderContentSha256
+}
+
+func (s *customSigner) GetIgnoredHeaders() map[string]string {
+	return s.IgnoredHeaders
 }
 
 func (s *customSigner) SignAuth(accessKeyID, credentialString, signedHeaders, signature string) string {
