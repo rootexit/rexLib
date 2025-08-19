@@ -189,6 +189,9 @@ func (s *customSigner) HashSHA256(data []byte) []byte {
 func (s *customSigner) BuildCanonicalHeaders(r *http.Request) (canonicalHeaders string, signedHeaderStr string) {
 	var headers []string
 	var signedHeaders []string
+	for k := range r.Header {
+		signedHeaders = append(signedHeaders, strings.ToLower(k))
+	}
 	headers = append(headers, strings.ToLower(rexHeaders.HeaderHost))
 	signedHeaderVals := make(http.Header)
 	for k, v := range r.Header {
