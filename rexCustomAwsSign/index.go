@@ -1,6 +1,7 @@
 package rexCustomAwsSign
 
 import (
+	"crypto/hmac"
 	"crypto/sha256"
 	"encoding/hex"
 	"github.com/rootexit/rexLib/rexHeaders"
@@ -16,7 +17,8 @@ import (
 */
 
 const (
-	timeFormat = "20060102T150405Z"
+	DeriveKeyPrefix = "REX4"
+	timeFormat      = "20060102T150405Z"
 	//authHeaderPrefix = "AWS4-HMAC-SHA256"
 	authHeaderPrefix = "REX1-HMAC-SHA256"
 	shortTimeFormat  = "20060102"
@@ -34,6 +36,20 @@ var ignoredHeaders = map[string]string{
 	rexHeaders.HeaderUserAgent:     "",
 	"X-Amzn-Trace-Id":              "",
 	rexHeaders.HeaderXRequestIDFor: "",
+}
+
+func DeriveSigningKey(region, service, secretKey string, dt time.Time) []byte {
+	kDate := hmacSHA256([]byte(DeriveKeyPrefix+secretKey), []byte(FormatShortTime(dt)))
+	kRegion := hmacSHA256(kDate, []byte(region))
+	kService := hmacSHA256(kRegion, []byte(service))
+	signingKey := hmacSHA256(kService, []byte(rexV1Request))
+	return signingKey
+}
+
+func hmacSHA256(key []byte, data []byte) []byte {
+	hash := hmac.New(sha256.New, key)
+	hash.Write(data)
+	return hash.Sum(nil)
 }
 
 func FormatDate(now time.Time) string {
@@ -173,17 +189,17 @@ func BuildCanonicalString(r *http.Request, canonicalHeaders, signedHeaders, body
 }
 
 func BuildCredentialString(region, service string, dt time.Time) string {
-	credentialString := buildSigningScope(region, service, dt)
+	credentialString := BuildSigningScope(region, service, dt)
 	return credentialString
 }
 
-func formatShortTime(dt time.Time) string {
+func FormatShortTime(dt time.Time) string {
 	return dt.UTC().Format(shortTimeFormat)
 }
 
-func buildSigningScope(region, service string, dt time.Time) string {
+func BuildSigningScope(region, service string, dt time.Time) string {
 	return strings.Join([]string{
-		formatShortTime(dt),
+		FormatShortTime(dt),
 		region,
 		service,
 		rexV1Request,
