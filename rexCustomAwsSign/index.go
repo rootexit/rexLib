@@ -26,9 +26,10 @@ const (
 	rexV1Request = "rex1_request"
 
 	// emptyStringSHA256 is a SHA256 of an empty string
-	EmptyStringSHA256 = `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
-	maxSkew           = 5 * time.Minute
-	doubleSpace       = "  "
+	EmptyStringSHA256       = `e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855`
+	maxSkew                 = 5 * time.Minute
+	doubleSpace             = "  "
+	authHeaderSignatureElem = "Signature="
 )
 
 var ignoredHeaders = map[string]string{
@@ -36,6 +37,15 @@ var ignoredHeaders = map[string]string{
 	rexHeaders.HeaderUserAgent:     "",
 	"X-Amzn-Trace-Id":              "",
 	rexHeaders.HeaderXRequestIDFor: "",
+}
+
+func SignAuth(accessKeyID, credentialString, signedHeaders, signature string) string {
+	parts := []string{
+		authHeaderPrefix + " Credential=" + accessKeyID + "/" + credentialString,
+		"SignedHeaders=" + signedHeaders,
+		authHeaderSignatureElem + signature,
+	}
+	return strings.Join(parts, ", ")
 }
 
 func BuildSignature(Region, ServiceName, SecretAccessKey, stringToSign string, Time time.Time) string {
