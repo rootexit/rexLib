@@ -68,37 +68,64 @@ type (
 )
 
 func NewCustomSigner(shortName string, version uint) CustomSigner {
-	return &customSigner{
-		DeriveKeyPrefix:         strings.ToUpper(fmt.Sprintf("%s%d", shortName, version)),
-		TimeFormat:              "20060102T150405Z",
-		AuthHeaderPrefix:        fmt.Sprintf("%s%d-HMAC-SHA25", shortName, version),
-		ShortTimeFormat:         "20060102",
-		VersionRequest:          strings.ToLower(fmt.Sprintf("%s%d_request", shortName, version)),
-		EmptyStringSHA256:       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
-		MaxSkew:                 5 * time.Minute,
-		DoubleSpace:             "  ",
-		AuthHeaderSignatureElem: "Signature=",
-		HeaderDate:              fmt.Sprintf("X-%s-Date", shortName),
-		HeaderContentSha256:     fmt.Sprintf("X-%s-Content-Sha256", shortName),
-		IgnoredHeaders: map[string]string{
-			rexHeaders.HeaderAuthorization:  "",
-			rexHeaders.HeaderUserAgent:      "",
-			"X-Amzn-Trace-Id":               "",
-			rexHeaders.HeaderAcceptEncoding: "",
-			rexHeaders.HeaderConnection:     "",
-			rexHeaders.HeaderContentLength:  "",
-			rexHeaders.HeaderAccept:         "",
-		},
-		NeedSignHeaders: map[string]string{
-			rexHeaders.HeaderAuthorization:  "",
-			rexHeaders.HeaderUserAgent:      "",
-			"X-Amzn-Trace-Id":               "",
-			rexHeaders.HeaderXRequestIDFor:  "",
-			rexHeaders.HeaderAcceptEncoding: "",
-			rexHeaders.HeaderConnection:     "",
-			rexHeaders.HeaderContentLength:  "",
-			rexHeaders.HeaderAccept:         "",
-		},
+	if shortName == "AWS" {
+		return &customSigner{
+			DeriveKeyPrefix:         "AWS4",
+			TimeFormat:              "20060102T150405Z",
+			AuthHeaderPrefix:        "AWS4-HMAC-SHA256",
+			ShortTimeFormat:         "20060102",
+			VersionRequest:          "aws4_request",
+			EmptyStringSHA256:       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+			MaxSkew:                 5 * time.Minute,
+			DoubleSpace:             "  ",
+			AuthHeaderSignatureElem: "Signature=",
+			HeaderDate:              "X-Amz-Date",
+			HeaderContentSha256:     "X-Amz-Content-Sha256",
+			IgnoredHeaders: map[string]string{
+				rexHeaders.HeaderAuthorization:  "",
+				rexHeaders.HeaderUserAgent:      "",
+				"X-Amzn-Trace-Id":               "",
+				rexHeaders.HeaderAcceptEncoding: "",
+				rexHeaders.HeaderConnection:     "",
+				rexHeaders.HeaderContentLength:  "",
+				rexHeaders.HeaderAccept:         "",
+			},
+			NeedSignHeaders: map[string]string{
+				"X-Amz-Date":           "",
+				"X-Amz-Content-Sha256": "",
+			},
+		}
+	} else {
+		tmpHeaderDate := fmt.Sprintf("X-%s-Date", shortName)
+		tmpHeaderContentSha256 := fmt.Sprintf("X-%s-Content-Sha256", shortName)
+		return &customSigner{
+			DeriveKeyPrefix:         strings.ToUpper(fmt.Sprintf("%s%d", shortName, version)),
+			TimeFormat:              "20060102T150405Z",
+			AuthHeaderPrefix:        fmt.Sprintf("%s%d-HMAC-SHA25", shortName, version),
+			ShortTimeFormat:         "20060102",
+			VersionRequest:          strings.ToLower(fmt.Sprintf("%s%d_request", shortName, version)),
+			EmptyStringSHA256:       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+			MaxSkew:                 5 * time.Minute,
+			DoubleSpace:             "  ",
+			AuthHeaderSignatureElem: "Signature=",
+			HeaderDate:              tmpHeaderDate,
+			HeaderContentSha256:     tmpHeaderContentSha256,
+			IgnoredHeaders: map[string]string{
+				rexHeaders.HeaderAuthorization:  "",
+				rexHeaders.HeaderUserAgent:      "",
+				"X-Amzn-Trace-Id":               "",
+				rexHeaders.HeaderAcceptEncoding: "",
+				rexHeaders.HeaderConnection:     "",
+				rexHeaders.HeaderContentLength:  "",
+				rexHeaders.HeaderAccept:         "",
+			},
+			NeedSignHeaders: map[string]string{
+				rexHeaders.HeaderXRequestIDFor: "",
+				rexHeaders.HeaderContentType:   "",
+				tmpHeaderDate:                  "",
+				tmpHeaderDate:                  "",
+			},
+		}
 	}
 }
 
@@ -221,6 +248,9 @@ func (s *customSigner) BuildCanonicalHeaders(r *http.Request) (canonicalHeaders 
 	for k := range s.NeedSignHeaders {
 		signedHeaders = append(signedHeaders, strings.ToLower(k))
 	}
+	//for k := range r.Header {
+	//	signedHeaders = append(signedHeaders, strings.ToLower(k))
+	//}
 	headers = append(headers, strings.ToLower(rexHeaders.HeaderHost))
 	signedHeaderVals := make(http.Header)
 	for k, v := range r.Header {

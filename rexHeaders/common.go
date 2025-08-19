@@ -20,6 +20,7 @@ const (
 	HeaderConnection     = "Connection"
 	HeaderContentLength  = "Content-Length"
 	HeaderAccept         = "Accept"
+	HeaderContentType    = "Content-Type"
 
 	// note: 模仿aws签名算法实现的头
 	HeaderXRExDate          = "X-REx-Date"
