@@ -50,7 +50,16 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 			return
 		}
 
-		requestID := uuid.NewString()
+		requestID := r.Header.Get(rexHeaders.HeaderXRequestIDFor)
+		if requestID != "" {
+			// 如果请求头中有 HeaderXRequestIDFor，则使用它
+			logc.Infof(ctx, "使用HeaderXRequestIDFor: %s", requestID)
+		} else {
+			// 否则生成新的 UUID
+			logc.Infof(ctx, "没有 HeaderXRequestIDFor，生成新的 UUID")
+			requestID = uuid.NewString()
+		}
+
 		ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, requestID)
 		w.Header().Set(rexHeaders.HeaderXRequestIDFor, requestID)
 
