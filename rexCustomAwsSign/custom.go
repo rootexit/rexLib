@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"github.com/rootexit/rexLib/rexHeaders"
+	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 	"sort"
 	"strings"
@@ -22,6 +23,7 @@ type (
 		WithMaxSkew(maxSkew time.Duration)
 		WithIgnoredHeaders(IgnoredHeaders map[string]string)
 		WithNeedSignHeaders(NeedSignHeaders map[string]string)
+		WithDebug(debug bool)
 		GetDeriveKeyPrefix() string
 		GetTimeFormat() string
 		GetAuthHeaderPrefix() string
@@ -51,6 +53,7 @@ type (
 		BuildStringToSign(reqTime, credentialString, canonicalString string) string
 	}
 	customSigner struct {
+		Debug                   bool
 		DeriveKeyPrefix         string
 		TimeFormat              string
 		AuthHeaderPrefix        string
@@ -70,6 +73,7 @@ type (
 func NewCustomSigner(shortName string, version uint) CustomSigner {
 	if shortName == "AWS" {
 		return &customSigner{
+			Debug:                   false,
 			DeriveKeyPrefix:         "AWS4",
 			TimeFormat:              "20060102T150405Z",
 			AuthHeaderPrefix:        "AWS4-HMAC-SHA256",
@@ -99,6 +103,7 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 		tmpHeaderDate := fmt.Sprintf("X-%s-Date", shortName)
 		tmpHeaderContentSha256 := fmt.Sprintf("X-%s-Content-Sha256", shortName)
 		return &customSigner{
+			Debug:                   false,
 			DeriveKeyPrefix:         strings.ToUpper(fmt.Sprintf("%s%d", shortName, version)),
 			TimeFormat:              "20060102T150405Z",
 			AuthHeaderPrefix:        fmt.Sprintf("%s%d-HMAC-SHA25", shortName, version),
@@ -139,6 +144,10 @@ func (s *customSigner) WithIgnoredHeaders(IgnoredHeaders map[string]string) {
 
 func (s *customSigner) WithNeedSignHeaders(NeedSignHeaders map[string]string) {
 	s.NeedSignHeaders = NeedSignHeaders
+}
+
+func (s *customSigner) WithDebug(debug bool) {
+	s.Debug = debug
 }
 
 func (s *customSigner) GetDeriveKeyPrefix() string {
@@ -199,21 +208,45 @@ func (s *customSigner) SignAuth(accessKeyID, credentialString, signedHeaders, si
 		"SignedHeaders=" + signedHeaders,
 		s.AuthHeaderSignatureElem + signature,
 	}
+	if s.Debug {
+		logx.Infof("parts: %s", strings.Join(parts, ","))
+	}
 	return strings.Join(parts, ", ")
 }
 
 func (s *customSigner) BuildSignature(Region, ServiceName, SecretAccessKey, stringToSign string, Time time.Time) string {
 	creds := s.DeriveSigningKey(Region, ServiceName, SecretAccessKey, Time)
+	if s.Debug {
+		logx.Infof("creds: %s", creds)
+	}
 	signature := s.HmacSHA256(creds, []byte(stringToSign))
+	if s.Debug {
+		logx.Infof("signature: %s", signature)
+	}
 	signatureHex := hex.EncodeToString(signature)
+	if s.Debug {
+		logx.Infof("signatureHex: %s", signatureHex)
+	}
 	return signatureHex
 }
 
 func (s *customSigner) DeriveSigningKey(region, service, secretKey string, dt time.Time) []byte {
 	kDate := s.HmacSHA256([]byte(s.DeriveKeyPrefix+secretKey), []byte(s.FormatShortTime(dt)))
+	if s.Debug {
+		logx.Infof("kDate: %s", kDate)
+	}
 	kRegion := s.HmacSHA256(kDate, []byte(region))
+	if s.Debug {
+		logx.Infof("kRegion: %s", kRegion)
+	}
 	kService := s.HmacSHA256(kRegion, []byte(service))
+	if s.Debug {
+		logx.Infof("kService: %s", kService)
+	}
 	signingKey := s.HmacSHA256(kService, []byte(s.VersionRequest))
+	if s.Debug {
+		logx.Infof("signingKey: %s", signingKey)
+	}
 	return signingKey
 }
 
@@ -245,9 +278,6 @@ func (s *customSigner) HashSHA256(data []byte) []byte {
 func (s *customSigner) BuildCanonicalHeaders(r *http.Request) (canonicalHeaders string, signedHeaderStr string) {
 	var headers []string
 	var signedHeaders []string
-	//for k := range s.NeedSignHeaders {
-	//	signedHeaders = append(signedHeaders, strings.ToLower(k))
-	//}
 	for k := range r.Header {
 		signedHeaders = append(signedHeaders, strings.ToLower(k))
 	}
@@ -306,8 +336,17 @@ func (s *customSigner) BuildCanonicalHeaders(r *http.Request) (canonicalHeaders 
 		}
 	}
 	s.StripExcessSpaces(headerItems)
+	if s.Debug {
+		logx.Infof("headerItems: %v", headerItems)
+	}
 	signedHeaderStr = strings.Join(headers, ";")
+	if s.Debug {
+		logx.Infof("signedHeaderStr: %v", signedHeaderStr)
+	}
 	canonicalHeaders = strings.Join(headerItems, "\n")
+	if s.Debug {
+		logx.Infof("canonicalHeaders: %v", canonicalHeaders)
+	}
 	return canonicalHeaders, signedHeaderStr
 }
 
@@ -362,11 +401,17 @@ func (s *customSigner) BuildCanonicalString(r *http.Request, canonicalHeaders, s
 		signedHeaders,
 		bodyDigest,
 	}, "\n")
+	if s.Debug {
+		logx.Infof("canonicalString: %v", canonicalString)
+	}
 	return canonicalString
 }
 
 func (s *customSigner) BuildCredentialString(region, service string, dt time.Time) string {
 	credentialString := s.BuildSigningScope(region, service, dt)
+	if s.Debug {
+		logx.Infof("credentialString: %v", credentialString)
+	}
 	return credentialString
 }
 
@@ -375,12 +420,16 @@ func (s *customSigner) FormatShortTime(dt time.Time) string {
 }
 
 func (s *customSigner) BuildSigningScope(region, service string, dt time.Time) string {
-	return strings.Join([]string{
+	signingScope := strings.Join([]string{
 		s.FormatShortTime(dt),
 		region,
 		service,
 		s.VersionRequest,
 	}, "/")
+	if s.Debug {
+		logx.Infof("signingScope: %v", signingScope)
+	}
+	return signingScope
 }
 func (s *customSigner) BuildStringToSign(reqTime, credentialString, canonicalString string) string {
 	stringToSign := strings.Join([]string{
@@ -389,5 +438,8 @@ func (s *customSigner) BuildStringToSign(reqTime, credentialString, canonicalStr
 		credentialString,
 		hex.EncodeToString(s.HashSHA256([]byte(canonicalString))),
 	}, "\n")
+	if s.Debug {
+		logx.Infof("stringToSign: %v", stringToSign)
+	}
 	return stringToSign
 }
