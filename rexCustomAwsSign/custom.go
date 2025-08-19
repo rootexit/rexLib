@@ -217,11 +217,11 @@ func (s *customSigner) SignAuth(accessKeyID, credentialString, signedHeaders, si
 func (s *customSigner) BuildSignature(Region, ServiceName, SecretAccessKey, stringToSign string, Time time.Time) string {
 	creds := s.DeriveSigningKey(Region, ServiceName, SecretAccessKey, Time)
 	if s.Debug {
-		logx.Infof("creds: %s", creds)
+		logx.Infof("creds: %x", creds)
 	}
 	signature := s.HmacSHA256(creds, []byte(stringToSign))
 	if s.Debug {
-		logx.Infof("signature: %s", signature)
+		logx.Infof("signature: %x", signature)
 	}
 	signatureHex := hex.EncodeToString(signature)
 	if s.Debug {
@@ -233,19 +233,19 @@ func (s *customSigner) BuildSignature(Region, ServiceName, SecretAccessKey, stri
 func (s *customSigner) DeriveSigningKey(region, service, secretKey string, dt time.Time) []byte {
 	kDate := s.HmacSHA256([]byte(s.DeriveKeyPrefix+secretKey), []byte(s.FormatShortTime(dt)))
 	if s.Debug {
-		logx.Infof("kDate: %s", kDate)
+		logx.Infof("kDate: %x", kDate)
 	}
 	kRegion := s.HmacSHA256(kDate, []byte(region))
 	if s.Debug {
-		logx.Infof("kRegion: %s", kRegion)
+		logx.Infof("kRegion: %x", kRegion)
 	}
 	kService := s.HmacSHA256(kRegion, []byte(service))
 	if s.Debug {
-		logx.Infof("kService: %s", kService)
+		logx.Infof("kService: %x", kService)
 	}
 	signingKey := s.HmacSHA256(kService, []byte(s.VersionRequest))
 	if s.Debug {
-		logx.Infof("signingKey: %s", signingKey)
+		logx.Infof("signingKey: %x", signingKey)
 	}
 	return signingKey
 }
