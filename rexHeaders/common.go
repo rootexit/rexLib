@@ -8,12 +8,12 @@ const (
 	HeaderXAccessKeyFor  = "X-AccessKey-For"
 	HeaderXSessionIdFor  = "X-SessionId-For"
 
-	HeaderXAdminIDFor  = "X-AdminID-For"
-	HeaderXUserIDFor   = "X-UserId-For"
-	HeaderXTenantIDFor = "X-TenantId-For"
-	HeaderXDomainIDFor = "X-DomainId-For"
+	HeaderXAdminIdFor  = "X-AdminID-For"
+	HeaderXUserIdFor   = "X-UserId-For"
+	HeaderXTenantIdFor = "X-TenantId-For"
+	HeaderXDomainIdFor = "X-DomainId-For"
 
-	HeaderXRequestIDFor  = "X-RequestId-For"
+	HeaderXRequestIdFor  = "X-RequestId-For"
 	HeaderXForwardedFor  = "X-Forwarded-For"
 	HeaderUserAgent      = "User-Agent"
 	HeaderAcceptEncoding = "Accept-Encoding"
