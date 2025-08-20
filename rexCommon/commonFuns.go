@@ -42,6 +42,18 @@ var (
 	}
 )
 
+func GetRemoteAddr(xForwardedFor string) string {
+	v := strings.Split(xForwardedFor, ",")
+	if len(v) > 0 {
+		// 取第一个IP
+		ip := strings.TrimSpace(v[0])
+		if ip != "" {
+			return ip
+		}
+	}
+	return xForwardedFor
+}
+
 // note: 解析ip，端口，ip类型
 func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
 	ip = ""
@@ -53,7 +65,7 @@ func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
 			// note: ipv6带端口
 			host, p, err := net.SplitHostPort(ipStr)
 			if err != nil {
-				logx.Errorf("❌ 无效的带端口 IPv6:", err)
+				logx.Errorf("❌ 无效的带端口 IPv6: %s", err)
 				return ip, port, ipType, err
 			}
 			ip = host
@@ -67,7 +79,7 @@ func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
 		if strings.Contains(ipStr, ":") {
 			host, p, err := net.SplitHostPort(ipStr)
 			if err != nil {
-				logx.Errorf("❌ 无效的带端口 IPv6:", err)
+				logx.Errorf("❌ 无效的带端口 IPv6: %s", err)
 				return ip, port, ipType, err
 			}
 			ip = host

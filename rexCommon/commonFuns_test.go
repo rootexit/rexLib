@@ -63,3 +63,51 @@ func TestMaskEmail(t *testing.T) {
 		})
 	}
 }
+
+func TestGetRemoteAddr(t *testing.T) {
+	type args struct {
+		xForwardedFor string
+	}
+	tests := []struct {
+		name string
+		args args
+		want string
+	}{
+		// TODO: Add test cases.
+		{
+			name: "test1",
+			args: args{
+				xForwardedFor: "58.19.100.41, 47.110.182.120",
+			},
+			want: "58.19.100.41",
+		},
+		{
+			name: "test2",
+			args: args{
+				xForwardedFor: "47.110.182.120,58.19.100.41",
+			},
+			want: "47.110.182.120",
+		},
+		{
+			name: "test3",
+			args: args{
+				xForwardedFor: "192.168.1.1",
+			},
+			want: "192.168.1.1",
+		},
+		{
+			name: "test3",
+			args: args{
+				xForwardedFor: "192.168.1.1",
+			},
+			want: "192.168.1.1",
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := GetRemoteAddr(tt.args.xForwardedFor); got != tt.want {
+				t.Errorf("GetRemoteAddr() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
