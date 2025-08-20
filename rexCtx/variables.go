@@ -1,11 +1,12 @@
 package rexCtx
 
 type (
-	CtxSiteDomain struct{}
-	CtxStartTime  struct{}
-	CtxClientIp   struct{}
-	CtxClientPort struct{}
-	CtxFullMethod struct{}
+	CtxSiteDomain    struct{}
+	CtxStartTime     struct{}
+	CtxXForwardedFor struct{}
+	CtxClientIp      struct{}
+	CtxClientPort    struct{}
+	CtxFullMethod    struct{}
 
 	CtxRequestURI      struct{}
 	CtxRequestId       struct{}
