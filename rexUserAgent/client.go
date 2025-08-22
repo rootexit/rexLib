@@ -1,7 +1,7 @@
 package rexUserAgent
 
 type Device struct {
-	DeviceId      string `gorm:"index:idx_client_id;column:client_id;comment:客户端ID;type: varchar(255);" json:"client_id"` // 客户端ID
+	DeviceId      string `gorm:"index:idx_device_id;column:device_id;comment:客户端ID;type: varchar(255);" json:"device_id"` // 客户端ID
 	DeviceVersion string `gorm:"column:device_version;comment:设备版本;type: varchar(64);" json:"device_version"`             // 设备版本
 	DeviceScore   string `gorm:"column:device_score;comment:设备评分;type: varchar(8);" json:"device_score"`                  // 设备评分
 }
