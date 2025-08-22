@@ -7,6 +7,7 @@ type Device struct {
 }
 
 type Client struct {
+	Device
 	IP              string `gorm:"column:ip;comment:IP地址;type: text;" json:"ip"`                                                 // IP地址
 	IpKeychainName  string `gorm:"column:ip_keychain_name;comment:ip的加密name;type: varchar(64);" json:"ip_keychain_name"`         // ip的加密name
 	IPHash          string `gorm:"index:idx_ip_hash;column:ip_hash;comment:IP地址hash值;type: varchar(255);" json:"ip_hash"`        // IP地址hash值
@@ -30,5 +31,4 @@ type Client struct {
 	DeviceFamily    string `gorm:"column:device_family;comment:DeviceFamily;type: varchar(64);" json:"device_family"`            // DeviceFamily
 	DeviceBrand     string `gorm:"column:device_brand;comment:DeviceBrand;type: varchar(64);" json:"device_brand"`               // DeviceBrand
 	DeviceModel     string `gorm:"column:device_model;comment:DeviceModel;type: varchar(64);" json:"device_model"`               // DeviceModel
-	Device
 }
