@@ -1,5 +1,11 @@
 package rexUserAgent
 
+type Device struct {
+	DeviceId      string  `gorm:"index:idx_client_id;column:client_id;comment:客户端ID;type: varchar(255);" json:"client_id"` // 客户端ID
+	DeviceVersion string  `gorm:"column:device_version;comment:设备版本;type: varchar(64);" json:"device_version"`             // 设备版本
+	DeviceScore   float32 `gorm:"column:device_score;comment:设备评分;type: float;" json:"device_score"`                       // 设备评分
+}
+
 type Client struct {
 	IP              string `gorm:"column:ip;comment:IP地址;type: text;" json:"ip"`                                                 // IP地址
 	IpKeychainName  string `gorm:"column:ip_keychain_name;comment:ip的加密name;type: varchar(64);" json:"ip_keychain_name"`         // ip的加密name
@@ -24,4 +30,5 @@ type Client struct {
 	DeviceFamily    string `gorm:"column:device_family;comment:DeviceFamily;type: varchar(64);" json:"device_family"`            // DeviceFamily
 	DeviceBrand     string `gorm:"column:device_brand;comment:DeviceBrand;type: varchar(64);" json:"device_brand"`               // DeviceBrand
 	DeviceModel     string `gorm:"column:device_model;comment:DeviceModel;type: varchar(64);" json:"device_model"`               // DeviceModel
+	Device
 }
