@@ -238,6 +238,7 @@ var WrongMessageEnUS = map[int32]string{
 	BsStatusCodeInvalid:                       "Code Invalid",
 	BsStatusPermissionDenied:                  "permission denied",
 	BsStatusRefreshTokenExpired:               "refresh_token expired",
+	BsStatusNeedUpdateBrowserVersion:          "Please update your browser version",
 	BsStatusInternalServerError:               "Internal Server Error",
 	BsStatusNotImplemented:                    "Not Implemented",
 	BsStatusBadGateway:                        "Bad Gateway",
