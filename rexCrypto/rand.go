@@ -4,7 +4,9 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"encoding/hex"
+	"fmt"
 	"math/big"
+	"strings"
 )
 
 // 字节(Byte): 通常将可表示常用英文字符8位二进制称为一字节。
@@ -32,8 +34,12 @@ const (
 type (
 	BitLen   int
 	randTool interface {
-		RandLowerString(stringLen int) string
 		GetAnyBtLen(num int) BitLen
+		RandInt(min, max int) int
+		RandInt64(min, max int64) int64
+		RandLowerString(stringLen int) string
+		RandStringRunes(n int) string
+		GenValidateCode(width int) string
 		RandBytesHexNoErr(btLen BitLen) string
 		RandBytesHex(btLen BitLen) (string, error)
 		RandBytesBase(btLen BitLen) (string, error)
@@ -57,6 +63,65 @@ func (r *defaultRand) GetAnyBtLen(BytesNum int) BitLen {
 		return BitLen(BytesNum / 8)
 	}
 	return BitLen(BytesNum / 8)
+}
+
+// RandInt64 返回 [min, max) 之间的随机 int64
+func (r *defaultRand) RandInt64(min, max int64) int64 {
+	if min >= max {
+		return max
+	}
+	// big.NewInt 参数必须 > 0
+	nBig, err := rand.Int(rand.Reader, big.NewInt(max-min))
+	if err != nil {
+		panic(fmt.Errorf("crypto/rand failed: %w", err))
+	}
+	return nBig.Int64() + min
+}
+
+// RandInt 返回 [min, max) 之间的随机 int
+func (r *defaultRand) RandInt(min, max int) int {
+	if min >= max {
+		return max
+	}
+	diff := int64(max - min)
+	nBig, err := rand.Int(rand.Reader, big.NewInt(diff))
+	if err != nil {
+		panic(fmt.Errorf("crypto/rand failed: %w", err))
+	}
+	return int(nBig.Int64()) + min
+}
+
+// 生成指定宽度的数字验证码
+func (r *defaultRand) GenValidateCode(width int) string {
+	if width <= 0 {
+		return ""
+	}
+
+	var sb strings.Builder
+	for i := 0; i < width; i++ {
+		// 生成 [0,10) 的随机数
+		n, err := rand.Int(rand.Reader, big.NewInt(10))
+		if err != nil {
+			panic(fmt.Errorf("crypto/rand failed: %w", err))
+		}
+		sb.WriteByte('0' + byte(n.Int64())) // 转为字符 '0'...'9'
+	}
+	return sb.String()
+}
+
+// RandStringRunes 返回一个指定长度的随机字符串（包含数字+大小写字母）
+func (r *defaultRand) RandStringRunes(n int) string {
+	const letterRunes = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]rune, n)
+	for i := range b {
+		// 生成 [0, len(letterRunes)) 的安全随机数
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(letterRunes))))
+		if err != nil {
+			panic(err) // 理论上不会发生
+		}
+		b[i] = rune(letterRunes[num.Int64()])
+	}
+	return string(b)
 }
 
 func (r *defaultRand) RandLowerString(stringLen int) string {
