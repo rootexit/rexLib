@@ -3,6 +3,7 @@ package rexCommon
 import (
 	"bytes"
 	"context"
+	"crypto/rand"
 	"crypto/sha1"
 	"encoding/hex"
 	"encoding/json"
@@ -10,12 +11,13 @@ import (
 	"fmt"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
+	"github.com/rootexit/rexLib/rexCrypto"
 	"github.com/zeromicro/go-zero/core/logx"
 	"google.golang.org/grpc/peer"
 	"io"
 	"io/ioutil"
 	"log"
-	"math/rand"
+	"math/big"
 	"mime/multipart"
 	"net"
 	"net/http"
@@ -41,6 +43,21 @@ var (
 		Timeout: 30 * time.Second,
 	}
 )
+
+// RandStringRunes 返回一个指定长度的随机字符串（包含数字+大小写字母）
+func RandStringRunes(n int) string {
+	const letterRunes = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+	b := make([]rune, n)
+	for i := range b {
+		// 生成 [0, len(letterRunes)) 的安全随机数
+		num, err := rand.Int(rand.Reader, big.NewInt(int64(len(letterRunes))))
+		if err != nil {
+			panic(err) // 理论上不会发生
+		}
+		b[i] = rune(letterRunes[num.Int64()])
+	}
+	return string(b)
+}
 
 func GetRemoteAddr(xForwardedFor string) string {
 	v := strings.Split(xForwardedFor, ",")
@@ -358,18 +375,30 @@ func BindAndCheck(ctx *gin.Context, data interface{}) error {
 	return nil
 }
 
-func RandInt64(min, max int64) int {
-	if min >= max || min == 0 || max == 0 {
-		return int(max)
+// RandInt64 返回 [min, max) 之间的随机 int64
+func RandInt64(min, max int64) int64 {
+	if min >= max {
+		return max
 	}
-	return int(rand.Int63n(max-min) + min)
+	// big.NewInt 参数必须 > 0
+	nBig, err := rand.Int(rand.Reader, big.NewInt(max-min))
+	if err != nil {
+		panic(fmt.Errorf("crypto/rand failed: %w", err))
+	}
+	return nBig.Int64() + min
 }
 
+// RandInt 返回 [min, max) 之间的随机 int
 func RandInt(min, max int) int {
-	if min >= max || min == 0 || max == 0 {
-		return int(max)
+	if min >= max {
+		return max
 	}
-	return rand.Intn(max-min) + min
+	diff := int64(max - min)
+	nBig, err := rand.Int(rand.Reader, big.NewInt(diff))
+	if err != nil {
+		panic(fmt.Errorf("crypto/rand failed: %w", err))
+	}
+	return int(nBig.Int64()) + min
 }
 
 func DelFilelist(path string) {
@@ -394,17 +423,6 @@ func DelFilelist(path string) {
 	if err != nil {
 		fmt.Printf("walk 错误 err: %v\n", err)
 	}
-}
-
-// RandStringRunes 返回随机字符串
-func RandStringRunes(n int) string {
-	var letterRunes = []rune("1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ")
-
-	b := make([]rune, n)
-	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
-	}
-	return string(b)
 }
 
 func UploadFile(url string, params map[string]string, nameField, fileName string, file io.Reader) ([]byte, error) {
@@ -567,14 +585,20 @@ func Arr2Str(strings []string) string {
 	return fmt.Sprintf("%s", b)
 }
 
+// 生成指定宽度的数字验证码
 func GenValidateCode(width int) string {
-	numeric := [10]byte{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}
-	r := len(numeric)
-	rand.Seed(time.Now().UnixNano())
+	if width <= 0 {
+		return ""
+	}
 
 	var sb strings.Builder
 	for i := 0; i < width; i++ {
-		fmt.Fprintf(&sb, "%d", numeric[rand.Intn(r)])
+		// 生成 [0,10) 的随机数
+		n, err := rand.Int(rand.Reader, big.NewInt(10))
+		if err != nil {
+			panic(fmt.Errorf("crypto/rand failed: %w", err))
+		}
+		sb.WriteByte('0' + byte(n.Int64())) // 转为字符 '0'...'9'
 	}
 	return sb.String()
 }
@@ -632,7 +656,7 @@ type WeChatShareConfig struct {
 }
 
 func GetWeChatShareConfig(debug bool, ticket, shareLink, appid string, JsApiList []string) WeChatShareConfig {
-	noncestr := RandStringRunes(16)
+	noncestr := rexCrypto.NewRand().RandBytesHexNoErr(rexCrypto.Bits128Len)
 	timestamp := time.Now().Unix()
 	tempUrl := fmt.Sprintf("jsapi_ticket=%s&noncestr=%s&timestamp=%d&url=%s",
 		ticket,
