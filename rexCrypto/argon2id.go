@@ -33,7 +33,7 @@ type (
 		KeyLen    uint32 // KeyLen
 		SaltLen   BitLen // Salt
 	}
-	argon2Tool interface {
+	Argon2Tool interface {
 		HashToPHC(secret, pepper []byte) (SelfContained string, err error)
 		VerifyPhc(phc string, secret, pepper []byte) (result bool, err error)
 		VerifyWithPepperSet(phc string, secret []byte, pepperCurrent, pepperOld []byte) (ok bool, rehashWith []byte, err error)
@@ -55,7 +55,7 @@ func DefaultArgon2Config() *Argon2Config {
 	}
 }
 
-func NewArgon2Tool(conf *Argon2Config) argon2Tool {
+func NewArgon2Tool(conf *Argon2Config) Argon2Tool {
 	if conf == nil {
 		conf = DefaultArgon2Config()
 	}
