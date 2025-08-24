@@ -56,6 +56,20 @@ func AESEncryptByGCM(plainText []byte, keyBase, ivBase string) (string, error) {
 	return base64.StdEncoding.EncodeToString(cipherText), nil
 }
 
+func AESEncryptByGCMBt(plainText, key, iv []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+	// 加密 + 认证
+	cipherText := aesGCM.Seal(nil, iv, plainText, nil)
+	return cipherText, nil
+}
+
 // **AES-GCM 解密**
 func AESDecryptByGCM(cipherTextBase64 string, keyBase, ivBase string) ([]byte, error) {
 	key, err := base64.StdEncoding.DecodeString(keyBase)

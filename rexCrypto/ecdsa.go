@@ -83,7 +83,7 @@ func ECDSAGenerateECCCertificate(curve elliptic.Curve, subject pkix.Name) (keyPe
 		Subject:               subject,
 		NotBefore:             nowTime,
 		NotAfter:              nowTime.Add(365 * 24 * time.Hour), // 证书有效期 1 年
-		KeyUsage:              x509.KeyUsageKeyEncipherment | x509.KeyUsageDigitalSignature,
+		KeyUsage:              x509.KeyUsageDigitalSignature,
 		ExtKeyUsage:           []x509.ExtKeyUsage{x509.ExtKeyUsageServerAuth, x509.ExtKeyUsageClientAuth},
 		BasicConstraintsValid: true,
 	}
