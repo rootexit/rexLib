@@ -102,6 +102,26 @@ func AESDecryptByGCM(cipherTextBase64 string, keyBase, ivBase string) ([]byte, e
 	return plainText, nil
 }
 
+// **AES-GCM 解密**
+func AESDecryptByGCMBt(cipherTextBt, key, iv []byte) ([]byte, error) {
+	block, err := aes.NewCipher(key)
+	if err != nil {
+		return nil, err
+	}
+
+	aesGCM, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, err
+	}
+
+	plainText, err := aesGCM.Open(nil, iv, cipherTextBt, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	return plainText, nil
+}
+
 // **AES-CCM 加密**
 func AESEncryptByCCM(plainText []byte, keyBase, ivBase string) (string, error) {
 	key, err := base64.StdEncoding.DecodeString(keyBase)
