@@ -35,9 +35,9 @@ func DefaultMpsRecord() MpsRecord {
 }
 
 func GenPassword(realPwd string) (encryptPwdBase, key, salt string) {
-	keyBt, _ := rexCrypto.RandBytes(32)
+	keyBt := rexCrypto.NewRand().RandBytesNoErr(32)
 	// 生成盐值
-	saltBt, _ := rexCrypto.RandBytes(16)
+	saltBt := rexCrypto.NewRand().RandBytesNoErr(16)
 	// 生成hmac-sha256后的密码
 	_, basePwd := rexCrypto.HMACSha256(realPwd+string(saltBt), string(keyBt))
 	return basePwd, key, salt
