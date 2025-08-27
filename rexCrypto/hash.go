@@ -7,7 +7,7 @@ import (
 )
 
 type (
-	hashTool interface {
+	HashTool interface {
 		Sha256(data []byte) []byte
 		Sha512(data []byte) []byte
 		HMACSha256(data []byte, key []byte) []byte
@@ -17,7 +17,7 @@ type (
 	}
 )
 
-func NewHash() hashTool {
+func NewHash() HashTool {
 	return &defaultHash{}
 }
 
