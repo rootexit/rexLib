@@ -22,6 +22,7 @@ const (
 	HeaderContentLength  = "Content-Length"
 	HeaderAccept         = "Accept"
 	HeaderContentType    = "Content-Type"
+	HeaderXCSRFToken     = "X-CSRF-Token"
 
 	// note: 模仿aws签名算法实现的头
 	HeaderXRExDate          = "X-REx-Date"
