@@ -62,6 +62,7 @@ func NewDefaultAcrTool(appName string) AcrTool {
 			},
 			mediumLevel: {
 				{AmrTypeOtpSms},
+				{AmrTypePwd, AmrDeviceBinding},
 				{AmrTypePwd, AmrTypeOtpSms},
 				{AmrTypePwd, AmrTypeOtpTotp},
 				{AmrTypePwd, AmrTypeOtpEmail},
