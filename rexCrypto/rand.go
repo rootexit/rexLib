@@ -33,7 +33,7 @@ const (
 
 type (
 	BitLen   int
-	randTool interface {
+	RandTool interface {
 		GetAnyBtLen(num int) BitLen
 		RandInt(min, max int) int
 		RandInt64(min, max int64) int64
@@ -53,7 +53,7 @@ type (
 	}
 )
 
-func NewRand() randTool {
+func NewRand() RandTool {
 	return &defaultRand{}
 }
 
