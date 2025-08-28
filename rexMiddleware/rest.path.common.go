@@ -16,10 +16,13 @@ import (
 )
 
 type PathHttpInterceptorMiddleware struct {
+	isAllowedPassRequestId bool
 }
 
-func NewPathHttpInterceptorMiddleware() *PathHttpInterceptorMiddleware {
-	return &PathHttpInterceptorMiddleware{}
+func NewPathHttpInterceptorMiddleware(isAllowedPassRequestId bool) *PathHttpInterceptorMiddleware {
+	return &PathHttpInterceptorMiddleware{
+		isAllowedPassRequestId: isAllowedPassRequestId,
+	}
 }
 
 func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
@@ -50,14 +53,13 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 			return
 		}
 
-		requestID := r.Header.Get(rexHeaders.HeaderXRequestIdFor)
-		if requestID != "" {
-			// 如果请求头中有 HeaderXRequestIDFor，则使用它
-			logc.Infof(ctx, "使用HeaderXRequestIDFor: %s", requestID)
-		} else {
-			// 否则生成新的 UUID
-			logc.Infof(ctx, "没有 HeaderXRequestIDFor，生成新的 UUID")
-			requestID = uuid.NewString()
+		requestID := uuid.NewString()
+		if m.isAllowedPassRequestId {
+			requestID = r.Header.Get(rexHeaders.HeaderXRequestIdFor)
+			if requestID != "" {
+				// 如果请求头中有 HeaderXRequestIDFor，则使用它
+				logc.Infof(ctx, "使用传递的请求id: %s", requestID)
+			}
 		}
 
 		ctx = context.WithValue(ctx, rexCtx.CtxRequestId{}, requestID)
