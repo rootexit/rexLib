@@ -34,6 +34,7 @@ type (
 		SaltLen   BitLen // Salt
 	}
 	Argon2Tool interface {
+		GetConfig() *Argon2Config
 		HashToPHC(secret, pepper []byte) (SelfContained string, err error)
 		VerifyPhc(phc string, secret, pepper []byte) (result bool, err error)
 		VerifyWithPepperSet(phc string, secret []byte, pepperCurrent, pepperOld []byte) (ok bool, rehashWith []byte, err error)
@@ -62,6 +63,10 @@ func NewArgon2Tool(conf *Argon2Config) Argon2Tool {
 	return &defaultArgon2Tool{
 		conf: conf,
 	}
+}
+
+func (d *defaultArgon2Tool) GetConfig() *Argon2Config {
+	return d.conf
 }
 
 // Hash 生成PHC字符串。pepper可选(服务端机密,从kms轮转)

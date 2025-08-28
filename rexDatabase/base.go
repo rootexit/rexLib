@@ -67,10 +67,10 @@ type AuditUserByStringModel struct {
 	UpdatedUserBy string `gorm:"index:idx_updated_user_by;column:updated_user_by;comment:更新数据的用户;type: varchar(255)" json:"updated_user_by"`
 	DeletedUserBy string `gorm:"index:idx_deleted_user_by;column:deleted_user_by;comment:删除数据的用户;type: varchar(255)" json:"-"`
 }
-type AuditTenantByStringModel struct {
-	CreatedTenantBy string `gorm:"index:idx_created_tenant_by;column:created_tenant_by;comment:创建数据的租户;type: varchar(255)" json:"created_tenant_by"`
-	UpdatedTenantBy string `gorm:"index:idx_updated_tenant_by;column:updated_tenant_by;comment:更新数据的租户;type: varchar(255)" json:"updated_tenant_by"`
-	DeletedTenantBy string `gorm:"index:idx_deleted_tenant_by;column:deleted_tenant_by;comment:删除数据的租户;type: varchar(255)" json:"-"`
+type AuditUserByUintModel struct {
+	CreatedUserBy uint `gorm:"index:idx_created_user_by;column:created_user_by;comment:创建数据的用户;" json:"created_user_by"`
+	UpdatedUserBy uint `gorm:"index:idx_updated_user_by;column:updated_user_by;comment:更新数据的用户;" json:"updated_user_by"`
+	DeletedUserBy uint `gorm:"index:idx_deleted_user_by;column:deleted_user_by;comment:删除数据的用户;" json:"-"`
 }
 type AuditTenantRpcByStringModel struct {
 	CreatedTenantBy string `gorm:"index:idx_created_tenant_by;column:created_tenant_by;comment:创建数据的租户;type: varchar(255)" json:"createdTenantBy"`
