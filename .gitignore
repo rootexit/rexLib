@@ -7,6 +7,8 @@
 *.dll
 *.so
 *.dylib
+rexUserAgent/ip2region.db
+rexUserAgent/regexes.yaml
 
 # Test binary, built with `go test -c`
 *.test

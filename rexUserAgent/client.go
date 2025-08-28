@@ -8,9 +8,9 @@ type Device struct {
 
 type Client struct {
 	Device
-	IP              string `gorm:"column:ip;comment:IP地址;type: text;" json:"ip"`                                                 // IP地址
-	IpKeychainName  string `gorm:"column:ip_keychain_name;comment:ip的加密name;type: varchar(64);" json:"ip_keychain_name"`         // ip的加密name
-	IPHash          string `gorm:"index:idx_ip_hash;column:ip_hash;comment:IP地址hash值;type: varchar(255);" json:"ip_hash"`        // IP地址hash值
+	IP              string `gorm:"column:ip;comment:IP地址;type: text;" json:"ip"` // IP地址
+	KName           string `gorm:"column:k_name;comment:kms密钥串别名;type:varchar(255);" json:"k_name"`
+	IPHash          []byte `gorm:"index:idx_ip_hash;column:ip_hash;comment:IP地址hash值;type: bytea;" json:"ip_hash"`               // IP地址hash值
 	Port            string `gorm:"column:port;comment:Port;type: varchar(64);" json:"port"`                                      // Port
 	UserAgent       string `gorm:"column:user_agent;comment:UserAgent;type: text;" json:"user_agent"`                            // UserAgent
 	CityId          int64  `gorm:"column:city_id;comment:CityId;type: bigint;" json:"city_id"`                                   // CityId
