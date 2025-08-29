@@ -249,6 +249,7 @@ const (
 	BsStatusRefreshTokenExpired               int32 = 40071 // 语义: 刷新凭证已过期
 	BsStatusNeedUpdateBrowserVersion          int32 = 40072 // 语义: 请更新浏览器版本
 	BsStatusIdpNotAllowDirectLogin            int32 = 40073 // 语义: idp不允许直接登录
+	BsStatusOauth2LoginNotCompleted           int32 = 40074 // 语义: 尚未完成登录流程
 	BsStatusInternalServerError               int32 = 50000 // 语义: 服务器内部错误，无法完成请求
 	BsStatusNotImplemented                    int32 = 50001 // 语义: 服务器不支持请求的功能，无法完成请求
 	BsStatusBadGateway                        int32 = 50002 // 语义: 作为网关或者代理工作的服务器尝试执行请求时，从远程服务器接收到了一个无效的响应

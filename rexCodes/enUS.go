@@ -240,6 +240,7 @@ var WrongMessageEnUS = map[int32]string{
 	BsStatusRefreshTokenExpired:               "refresh_token expired",
 	BsStatusNeedUpdateBrowserVersion:          "Please update your browser version",
 	BsStatusIdpNotAllowDirectLogin:            "Idp does not allow direct login",
+	BsStatusOauth2LoginNotCompleted:           "The login process has not been completed",
 	BsStatusInternalServerError:               "Internal Server Error",
 	BsStatusNotImplemented:                    "Not Implemented",
 	BsStatusBadGateway:                        "Bad Gateway",
