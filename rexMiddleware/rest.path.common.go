@@ -16,12 +16,12 @@ import (
 )
 
 type PathHttpInterceptorMiddleware struct {
-	isAllowedPassRequestId bool
+	isAllowedInheritRequestId bool
 }
 
-func NewPathHttpInterceptorMiddleware(isAllowedPassRequestId bool) *PathHttpInterceptorMiddleware {
+func NewPathHttpInterceptorMiddleware(isAllowedInheritRequestId bool) *PathHttpInterceptorMiddleware {
 	return &PathHttpInterceptorMiddleware{
-		isAllowedPassRequestId: isAllowedPassRequestId,
+		isAllowedInheritRequestId: isAllowedInheritRequestId,
 	}
 }
 
@@ -54,7 +54,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		}
 
 		requestID := uuid.NewString()
-		if m.isAllowedPassRequestId {
+		if m.isAllowedInheritRequestId {
 			requestID = r.Header.Get(rexHeaders.HeaderXRequestIdFor)
 			if requestID != "" {
 				// 如果请求头中有 HeaderXRequestIDFor，则使用它
