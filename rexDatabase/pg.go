@@ -13,18 +13,18 @@ import (
 )
 
 type PgDbConfig struct {
-	Host        string
-	User        string
-	Password    string
-	DbName      string
-	Port        uint
-	SslMode     string
-	Loc         string
-	Debug       bool
-	TablePrefix string
-	MaxIdle     int
-	MaxOpen     int
-	MaxLifetime int64
+	Host        string `json:"default=pg.xx.com"`
+	User        string `json:"default=admin"`
+	Password    string `json:"default=admin123"`
+	DbName      string `json:"default=public"`
+	Port        uint   `json:"default=5432"`
+	SslMode     string `json:"default=disable"`
+	MaxIdle     int    `json:"default=10"`
+	MaxOpen     int    `json:"default=100"`
+	Loc         string `json:"default=Asia/Shanghai"`
+	Debug       bool   `json:"default=true"`
+	TablePrefix string `json:"default=v1_"`
+	MaxLifetime int64  `json:"default=300"`
 
 	//Charset              string
 	//LogMode              bool
