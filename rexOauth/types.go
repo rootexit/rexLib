@@ -1,14 +1,14 @@
 package rexOauth
 
 type OauthConfig struct {
-	ClientId      string `json:"default=client_id"`
-	ClientSecret  string `json:"default=client_secret"`
-	Issuer        string `json:"default=https://idp.xx.com"`
-	RedirectUrl   string `json:"default=https://app.xx.com/oauth/callback"`
-	AuthorizeUrl  string `json:"default=/oauth/authorize"`
-	TokenUrl      string `json:"default=/oauth/token"`
-	RevokeUrl     string `json:"default=/oauth/revoke"`
-	IntrospectUrl string `json:"default=/oauth/introspect"`
+	ClientId      string `json:",default=client_id"`
+	ClientSecret  string `json:",default=client_secret"`
+	Issuer        string `json:",default=https://idp.xx.com"`
+	RedirectUrl   string `json:",default=https://app.xx.com/oauth/callback"`
+	AuthorizeUrl  string `json:",default=/oauth/authorize"`
+	TokenUrl      string `json:",default=/oauth/token"`
+	RevokeUrl     string `json:",default=/oauth/revoke"`
+	IntrospectUrl string `json:",default=/oauth/introspect"`
 }
 
 type OauthRefreshTokenReq struct {
