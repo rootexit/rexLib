@@ -11,6 +11,7 @@ type (
 	CtxRequestURI      struct{}
 	CtxRequestId       struct{}
 	CtxTenantId        struct{}
+	CtxTargetTenantId  struct{}
 	CtxTenants         struct{}
 	CtxDomainId        struct{}
 	CtxUserId          struct{}
