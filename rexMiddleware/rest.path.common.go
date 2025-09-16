@@ -46,6 +46,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 
 		ctx = context.WithValue(ctx, rexCtx.CtxClientIp{}, ip)
 		ctx = context.WithValue(ctx, rexCtx.CtxClientPort{}, port)
+		ctx = context.WithValue(ctx, rexCtx.CtxClientType{}, ipType)
 		logc.Infof(ctx, "IP: %s, Port: %s", ip, port)
 		if err != nil {
 			logx.Infof("解析ip报错: %s", err)

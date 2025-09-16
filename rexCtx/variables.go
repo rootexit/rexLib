@@ -6,6 +6,7 @@ type (
 	CtxXForwardedFor struct{}
 	CtxClientIp      struct{}
 	CtxClientPort    struct{}
+	CtxClientType    struct{}
 	CtxFullMethod    struct{}
 
 	CtxRequestURI      struct{}
