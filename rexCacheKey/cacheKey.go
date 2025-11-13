@@ -1,6 +1,8 @@
 package rexCacheKey
 
 const (
+	CsrfCacheKey = "%s:csrf-%s"
+
 	OnlineKey = "%s:online-%s"
 
 	ACCESS_TOKEN_KEY = "%s:accessToken-%s"
