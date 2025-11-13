@@ -28,6 +28,7 @@ type (
 	CtxUserAgent       struct{}
 	CtxXAccessKeyFor   struct{}
 	CtxSessionIDFor    struct{}
+	CtxSessionFor      struct{}
 	CtxXAuthMethodFor  struct{}
 	CtxXAccountFor     struct{}
 	CtxCityId          struct{}
