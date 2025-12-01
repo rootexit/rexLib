@@ -18,7 +18,8 @@ const (
 type CommonVerifiedStatus int8
 
 const (
-	VerifiedStatusDraft CommonVerifiedStatus = iota + 1
+	VerifiedStatusUnSubmitted CommonVerifiedStatus = iota + 1
+	VerifiedStatusDraft
 	VerifiedStatusSubmitted
 	VerifiedStatusRejected
 	VerifiedStatusVerified
