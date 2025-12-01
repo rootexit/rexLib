@@ -7,21 +7,27 @@ const (
 	AllStatusEnable
 )
 
+type CommonSessionStatus int8
+
 const (
-	SessionStatusAnonymous CommonStatus = iota + 1
+	SessionStatusAnonymous CommonSessionStatus = iota + 1
 	SessionStatusAuthenticated
 	SessionStatusRevoked
 )
 
+type CommonVerifiedStatus int8
+
 const (
-	VerifiedStatusDraft CommonStatus = iota + 1
+	VerifiedStatusDraft CommonVerifiedStatus = iota + 1
 	VerifiedStatusSubmitted
 	VerifiedStatusRejected
 	VerifiedStatusVerified
 )
 
+type CommonContentStatus int8
+
 const (
-	ContentStatusDraft CommonStatus = iota + 1
+	ContentStatusDraft CommonContentStatus = iota + 1
 	ContentStatusSubmitted
 	ContentStatusRejected
 	ContentStatusUnPublished
