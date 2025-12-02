@@ -59,7 +59,7 @@ func EasyNewCasBinWatchTool(DB *gorm.DB, rc *rexStore.RedisConfig, watchChannel 
 }
 
 func EasyNewCasBinTool(DB *gorm.DB) CasBinTool {
-	return NewFullCasBinTool(DB, nil, DefaultCasBinPrefix, DefaultCasBinTable, DefaultCasBinConfPath, false, []gormadapter.Filter{}, false, DefaultCasBinWatchChannel, func(enforcer *casbin.Enforcer, msg string) {})
+	return NewFullCasBinTool(DB, nil, DefaultCasBinPrefix, DefaultCasBinTable, DefaultCasBinConfPath, false, []gormadapter.Filter{}, false, DefaultCasBinWatchChannel, nil)
 }
 
 func NewFullCasBinTool(DB *gorm.DB, rc *rexStore.RedisConfig, prefix, tableName, confPath string, isFiltered bool, filters []gormadapter.Filter, isWatching bool, watchChannel string, watchCallback func(enforcer *casbin.Enforcer, msg string)) CasBinTool {
@@ -160,7 +160,7 @@ func (t *defaultCasBinTool) Bootstrap() error {
 		}
 	}
 	if t.isWatching {
-		if t.watchCallback != nil {
+		if t.watchCallback == nil {
 			return errors.New("watch callback is nil")
 		}
 		if t.watchChannel == "" {
