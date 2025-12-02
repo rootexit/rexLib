@@ -3,13 +3,14 @@ package rexRbac
 import (
 	"encoding/base64"
 	"errors"
+	"log"
+
 	rediswatcher "github.com/billcobbler/casbin-redis-watcher/v2"
 	"github.com/casbin/casbin/v2"
 	"github.com/casbin/casbin/v2/persist"
 	gormadapter "github.com/casbin/gorm-adapter/v3"
 	"github.com/rootexit/rexLib/rexStore"
 	"gorm.io/gorm"
-	"log"
 )
 
 const (
@@ -32,6 +33,7 @@ type CasbinEngine struct {
 	Watcher          persist.Watcher
 }
 
+// Deprecated: Use CasBinTool instead.
 func EasyNewCasbinEngine(RbacPath, RbacChannel string, redis *rexStore.RedisConfig, db *gorm.DB, v ...any) *CasbinEngine {
 	if RbacPath == "" {
 		panic("CasbinEngine RbacPath is nil")
@@ -74,6 +76,7 @@ func EasyNewCasbinEngine(RbacPath, RbacChannel string, redis *rexStore.RedisConf
 	}
 }
 
+// Deprecated: Use CasBinTool instead.
 func NewCasbinEngine(params *CasbinEngine) *CasbinEngine {
 	if params == nil {
 		panic("CasbinEngine params is nil")
@@ -95,6 +98,7 @@ func NewCasbinEngine(params *CasbinEngine) *CasbinEngine {
 	}
 }
 
+// Deprecated: Use CasBinTool instead.
 func InitRbac(RbacPath string, Db *gorm.DB, prefix, tableName string) (*casbin.Enforcer, error) {
 	if prefix == "" {
 		prefix = ""
@@ -117,6 +121,7 @@ func InitRbac(RbacPath string, Db *gorm.DB, prefix, tableName string) (*casbin.E
 	return e, nil
 }
 
+// Deprecated: Use CasBinTool instead.
 func (engine *CasbinEngine) EasyNewWatcher() *CasbinEngine {
 	// note: 如果是定制的过滤器模式下，不判断是否是过滤模式，也不判断是否是定制回调模式
 	engine.IsCustomCallback = false
@@ -124,6 +129,7 @@ func (engine *CasbinEngine) EasyNewWatcher() *CasbinEngine {
 	return engine.NewWatcher()
 }
 
+// Deprecated: Use CasBinTool instead.
 func (engine *CasbinEngine) CustomFilterNewWatcher(filters []gormadapter.Filter) *CasbinEngine {
 	// note: 如果是定制的过滤器模式下，不判断是否是过滤模式，也不判断是否是定制回调模式
 	engine.IsCustomCallback = true
@@ -135,6 +141,7 @@ func (engine *CasbinEngine) CustomFilterNewWatcher(filters []gormadapter.Filter)
 	return engine.NewWatcher()
 }
 
+// Deprecated: Use CasBinTool instead.
 func (engine *CasbinEngine) NewWatcher() *CasbinEngine {
 	decodedBytes, err := base64.StdEncoding.DecodeString(engine.Redis.Pass)
 	if err != nil {
