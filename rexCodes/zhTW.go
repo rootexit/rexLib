@@ -241,6 +241,8 @@ var WrongMessageZhTW = map[int32]string{
 	BsStatusNeedUpdateBrowserVersion:          "请更新浏览器版本",
 	BsStatusIdpNotAllowDirectLogin:            "idp不允许直接登录",
 	BsStatusOauth2LoginNotCompleted:           "尚未完成登录流程",
+	BsStatusPlanPermissionDenied:              "用户尚未购买此套餐",
+	BsStatusRolePermissionDenied:              "用户角色权限不足，请联系企业管理员",
 	BsStatusInternalServerError:               "服务器内部错误，无法完成请求",
 	BsStatusNotImplemented:                    "服务器不支持请求的功能，无法完成请求",
 	BsStatusBadGateway:                        "作为网关或者代理工作的服务器尝试执行请求时，从远程服务器接收到了一个无效的响应",
