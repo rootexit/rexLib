@@ -3,16 +3,17 @@ package rexMiddleware
 import (
 	"context"
 	"errors"
-	"github.com/google/uuid"
-	"github.com/rootexit/rexLib/rexCtx"
-	"github.com/rootexit/rexLib/rexHeaders"
-	"github.com/zeromicro/go-zero/core/logc"
-	"github.com/zeromicro/go-zero/core/logx"
-	"github.com/zeromicro/go-zero/rest/httpx"
 	"net"
 	"net/http"
 	"strings"
 	"time"
+
+	"github.com/rootexit/rexLib/rexCtx"
+	"github.com/rootexit/rexLib/rexHeaders"
+	"github.com/rootexit/rexLib/rexUlid"
+	"github.com/zeromicro/go-zero/core/logc"
+	"github.com/zeromicro/go-zero/core/logx"
+	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 type PathHttpInterceptorMiddleware struct {
@@ -54,7 +55,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 			return
 		}
 
-		requestID := uuid.NewString()
+		requestID := rexUlid.NewString()
 		if m.isAllowedInheritRequestId {
 			requestID = r.Header.Get(rexHeaders.HeaderXRequestIdFor)
 			if requestID != "" {
