@@ -42,7 +42,7 @@ func FormatBucketDomainByOsType(OsType string, name, region string, v ...any) (B
 		BucketAccelerateDomain = fmt.Sprintf("%s.cos.%s.myqcloud.com", name, region)
 	case ObjectStorageTypeOss:
 		BucketInternetDomain = fmt.Sprintf("%s.oss-%s.aliyuncs.com", name, region)
-		BucketInternalDomain = fmt.Sprintf("%s.oss-%s-internal.com", name, region)
+		BucketInternalDomain = fmt.Sprintf("%s.oss-%s-internal.aliyuncs.com", name, region)
 		BucketAccelerateDomain = fmt.Sprintf("%s.oss-accelerate.aliyuncs.com", name)
 	case ObjectStorageTypeS3:
 		BucketInternetDomain = fmt.Sprintf("%s.s3.%s.amazonaws.com", name, region)
