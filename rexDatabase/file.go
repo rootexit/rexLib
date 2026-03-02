@@ -1,6 +1,8 @@
 package rexDatabase
 
-type IsAccelerate int8
+import "strings"
+
+type IsAccelerate int32
 
 // note: 是否开启传输加速,1->否,2-是
 const (
@@ -84,7 +86,8 @@ const (
 	DefaultCoverArchiveTypeOther        = "https://cdn.lilsite.com/default_folder_cover/file_coll_default_others_cover.png"
 )
 
-func FormatArchiveType(uploadType UploadType, fileLowerExt string) (archiveType ArchiveType) {
+func FormatArchiveType(uploadType UploadType, fileExt string) (archiveType ArchiveType) {
+	fileLowerExt := strings.ToLower(fileExt)
 	switch fileLowerExt {
 	case ".png", ".jpg", ".jpeg", ".webp", ".bmp", ".tif", ".tiff", ".raw", ".heic", ".heif", ".ai", ".svg", ".eps", ".ico", ".swf":
 		archiveType = ArchiveTypeImage
