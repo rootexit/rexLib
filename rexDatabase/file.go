@@ -39,6 +39,17 @@ const (
 	ArchiveTypeOther        ArchiveType = "other"
 )
 
+const (
+	ArchiveDefaultNameImage        string = "图片"
+	ArchiveDefaultNameVideo        string = "视频"
+	ArchiveDefaultNameAudio        string = "音频"
+	ArchiveDefaultNameDocument     string = "文档"
+	ArchiveDefaultNamePDF          string = "PDF"
+	ArchiveDefaultNameCompressed   string = "压缩包"
+	ArchiveDefaultNameExternalLink string = "外部链接"
+	ArchiveDefaultNameOther        string = "其他"
+)
+
 func DefaultFileCover(archiveType ArchiveType) string {
 	switch archiveType {
 	case ArchiveTypeImage:
