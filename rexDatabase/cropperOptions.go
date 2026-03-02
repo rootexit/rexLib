@@ -130,8 +130,9 @@ const (
 )
 
 type CropperExtraOptions struct {
-	Circled   CropperExtraOptionsCircled `gorm:"column:circled;comment:是否圆形;type:smallint;default:1" json:"circled"`
-	MaxMode   CropperExtraOptionsMaxMode `gorm:"column:max_mode;comment:最大尺寸限制模式;type:smallint;default:1" json:"max_mode"`
-	MaxWidth  int64                      `gorm:"column:max_width;comment:最大宽度;type: bigint;default:0" json:"max_width"`
-	MaxHeight int64                      `gorm:"column:max_height;comment:最大高度;type: bigint;default:0" json:"max_height"`
+	DefaultImage string                     `gorm:"column:default_image;comment:默认图片;type: varchar(255)" json:"default_image"`
+	Circled      CropperExtraOptionsCircled `gorm:"column:circled;comment:是否圆形;type:smallint;default:1" json:"circled"`
+	MaxMode      CropperExtraOptionsMaxMode `gorm:"column:max_mode;comment:最大尺寸限制模式;type:smallint;default:1" json:"max_mode"`
+	MaxWidth     int64                      `gorm:"column:max_width;comment:最大宽度;type: bigint;default:0" json:"max_width"`
+	MaxHeight    int64                      `gorm:"column:max_height;comment:最大高度;type: bigint;default:0" json:"max_height"`
 }
