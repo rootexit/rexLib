@@ -66,7 +66,7 @@ const (
 )
 
 type CropperOptions struct {
-	ViewMode                         CropperOptionsViewMode    `gorm:"column:view_mode;comment:视图模式;type:smallint;default:0" json:"view_mode"`
+	ViewMode                         CropperOptionsViewMode    `gorm:"column:view_mode;comment:视图模式;type:smallint;default:1" json:"view_mode"`
 	DragMode                         CropperOptionsDragMode    `gorm:"column:drag_mode;comment:拖动模式;type:varchar(12);default:crop" json:"drag_mode"`
 	CropperOptionsInitialAspectRatio CropperOptionsAspectRatio `gorm:"embedded;embeddedPrefix:initial_aspect_ratio_" json:"initial_aspect_ratio"`
 	CropperOptionsAspectRatio        CropperOptionsAspectRatio `gorm:"embedded;embeddedPrefix:aspect_ratio_" json:"aspect_ratio"`
