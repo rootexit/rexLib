@@ -103,7 +103,7 @@ type CropperOptions struct {
 	MinCanvasHeight          int64               `gorm:"column:min_canvas_height;comment:最小canvas高度;type: bigint;default:0" json:"min_canvas_height"`
 	MinCropBoxWidth          int64               `gorm:"column:min_crop_box_width;comment:最小裁切框宽度;type: bigint;default:0" json:"min_crop_box_width"`
 	MinCropBoxHeight         int64               `gorm:"column:min_crop_box_height;comment:最小裁切框高度;type: bigint;default:0" json:"min_crop_box_height"`
-	CropperExtraOptions      CropperExtraOptions `gorm:"embedded" json:"extra"`
+	CropperExtraOptions      CropperExtraOptions `gorm:"embedded;embeddedPrefix:extra_" json:"extra"`
 }
 
 type CropperOptionsAspectRatio struct {
