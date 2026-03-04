@@ -12,3 +12,15 @@ const (
 	ContentTypePdf     ContentType = "pdf"
 	ContentTypeNews    ContentType = "express"
 )
+
+type VisibleType string
+
+// note: 文章可见类型，1->不可见,2->所有成员可见,4->仅订阅用户可见,5->部分人可见,6->部分人不可见,7->所有人可见
+const (
+	VisibleTypeInvisible     VisibleType = "private"
+	VisibleTypeAllMember     VisibleType = "all_member"
+	VisibleTypeSubscribeOnly VisibleType = "subscribe_only"
+	VisibleTypePartly        VisibleType = "partly"
+	VisibleTypePartlyNot     VisibleType = "partly_not"
+	VisibleTypePublic        VisibleType = "public"
+)
