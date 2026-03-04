@@ -1,7 +1,15 @@
 package rexDatabase
 
 type CommonLocationModel struct {
-	LocationName string `gorm:"column:location_name;comment:位置名称;type:varchar(255)" json:"location_name"`
+	FormattedAddress string `gorm:"column:formatted_address;comment:格式化后的完整地址;type:varchar(255)" json:"formatted_address"`
+	Country          string `gorm:"column:country;comment:城市;type: varchar(64);" json:"country"`           // Country
+	Province         string `gorm:"column:province;comment:省份;type: varchar(64);" json:"province"`         // Province
+	City             string `gorm:"column:city;comment:城市;type: varchar(64);" json:"city"`                 // City
+	CityCode         string `gorm:"column:city_code;comment:城市行政区划代码;type: varchar(64);" json:"city_code"` // CityCode
+	Region           string `gorm:"column:region;comment:Region;type: varchar(64);" json:"region"`         // Region
+	District         string `gorm:"column:district;comment:区域;type: varchar(64);" json:"district"`         // District
+	Street           string `gorm:"column:street;comment:街道;type: varchar(255);" json:"street"`            // Street
+	Number           string `gorm:"column:number;comment:门牌号;type: varchar(64);" json:"number"`            // Number
 	LonLat
 }
 
