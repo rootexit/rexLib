@@ -6,7 +6,6 @@ type CommonLocationModel struct {
 	Province         string `gorm:"column:province;comment:省份;type: varchar(64);" json:"province"`         // Province
 	City             string `gorm:"column:city;comment:城市;type: varchar(64);" json:"city"`                 // City
 	CityCode         string `gorm:"column:city_code;comment:城市行政区划代码;type: varchar(64);" json:"city_code"` // CityCode
-	Region           string `gorm:"column:region;comment:Region;type: varchar(64);" json:"region"`         // Region
 	District         string `gorm:"column:district;comment:区域;type: varchar(64);" json:"district"`         // District
 	Street           string `gorm:"column:street;comment:街道;type: varchar(255);" json:"street"`            // Street
 	Number           string `gorm:"column:number;comment:门牌号;type: varchar(64);" json:"number"`            // Number
