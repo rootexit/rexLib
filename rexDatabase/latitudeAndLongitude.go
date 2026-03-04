@@ -2,7 +2,7 @@ package rexDatabase
 
 type CommonLocationModel struct {
 	FormattedAddress string `gorm:"column:formatted_address;comment:格式化后的完整地址;type:varchar(255)" json:"formatted_address"`
-	Country          string `gorm:"column:country;comment:城市;type: varchar(64);" json:"country"`           // Country
+	Country          string `gorm:"column:country;comment:国家;type: varchar(64);" json:"country"`           // Country
 	Province         string `gorm:"column:province;comment:省份;type: varchar(64);" json:"province"`         // Province
 	City             string `gorm:"column:city;comment:城市;type: varchar(64);" json:"city"`                 // City
 	CityCode         string `gorm:"column:city_code;comment:城市行政区划代码;type: varchar(64);" json:"city_code"` // CityCode

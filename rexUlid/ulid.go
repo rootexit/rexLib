@@ -7,6 +7,8 @@ import (
 	"github.com/oklog/ulid/v2"
 )
 
+// [ 10 字符时间戳 ] [ 16 字符随机数 ]
+
 func New() ulid.ULID {
 	t := time.Now()
 	entropy := ulid.Monotonic(rand.New(rand.NewSource(t.UnixNano())), 0)
