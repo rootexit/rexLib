@@ -24,3 +24,11 @@ const (
 	VisibleTypePartlyNot     VisibleType = "partly_not"
 	VisibleTypePublic        VisibleType = "public"
 )
+
+type AuthorType string
+
+// note: 作者类型, 1->独立作者, 2->联合创作
+const (
+	AuthorTypeIndependent AuthorType = "independent"
+	AuthorTypeJoint       AuthorType = "joint"
+)
