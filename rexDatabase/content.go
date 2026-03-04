@@ -43,3 +43,11 @@ const (
 	MiniAppTypeAlipay MiniAppType = "alipay"
 	MiniAppTypeDouyin MiniAppType = "douyin"
 )
+
+type CollectionType string
+
+// note: 类型,1->站内文章合集,2->跳转链接;
+const (
+	CollectionTypeContent CollectionType = "collection"
+	CollectionTypeLink    CollectionType = "link"
+)
