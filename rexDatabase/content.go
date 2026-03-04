@@ -32,3 +32,14 @@ const (
 	AuthorTypeIndependent AuthorType = "independent"
 	AuthorTypeJoint       AuthorType = "joint"
 )
+
+type MiniApp string
+
+// 如果是小程序类型,1->微信小程序,2->支付宝小程序,3->抖音小程序
+
+const (
+	MiniAppNone   MiniApp = "none"
+	MiniAppWeChat MiniApp = "wechat"
+	MiniAppAlipay MiniApp = "alipay"
+	MiniAppDouyin MiniApp = "douyin"
+)
