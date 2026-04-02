@@ -16,6 +16,7 @@ type (
 	CtxTenants         struct{}
 	CtxDomainId        struct{}
 	CtxUserId          struct{}
+	CtxUniqueId        struct{}
 	CtxAdminId         struct{}
 	CtxRole            struct{}
 	CtxClaimsAudience  struct{}
