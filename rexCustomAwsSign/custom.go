@@ -24,6 +24,17 @@ const (
 )
 
 type (
+	ParsedAuthorization struct {
+		Algorithm        string
+		AccessKey        string
+		Date             string
+		Region           string
+		Service          string
+		SignedHeadersStr string
+		SignedHeaders    map[string]string
+		Signature        string
+		CredentialScope  string
+	}
 	CustomSigner interface {
 		WithMaxSkew(maxSkew time.Duration)
 		WithIgnoredHeaders(IgnoredHeaders map[string]string)
@@ -56,6 +67,7 @@ type (
 		FormatShortTime(dt time.Time) string
 		BuildSigningScope(region, service string, dt time.Time) string
 		BuildStringToSign(reqTime, credentialString, canonicalString string) string
+		ParseAuthorizationHeader(header string) (*ParsedAuthorization, error)
 	}
 	customSigner struct {
 		Debug                   bool
@@ -445,4 +457,43 @@ func (s *customSigner) BuildStringToSign(reqTime, credentialString, canonicalStr
 		logx.Infof("stringToSign: %v", stringToSign)
 	}
 	return stringToSign
+}
+
+func (s *customSigner) ParseAuthorizationHeader(header string) (*ParsedAuthorization, error) {
+	if !strings.HasPrefix(header, s.AuthHeaderPrefix+" ") {
+		return nil, fmt.Errorf("unsupported algorithm")
+	}
+
+	parts := strings.Split(header[len(s.AuthHeaderPrefix+" "):], ",")
+	parsed := &ParsedAuthorization{
+		Algorithm: s.AuthHeaderPrefix,
+	}
+
+	for _, part := range parts {
+		part = strings.TrimSpace(part)
+		if strings.HasPrefix(part, "Credential=") {
+			credVal := strings.TrimPrefix(part, "Credential=")
+			credParts := strings.Split(credVal, "/")
+			if len(credParts) != 5 {
+				return nil, fmt.Errorf("invalid credential scope")
+			}
+			parsed.AccessKey = credParts[0]
+			parsed.Date = credParts[1]
+			parsed.Region = credParts[2]
+			parsed.Service = credParts[3]
+			parsed.CredentialScope = strings.Join(credParts[1:], "/")
+		} else if strings.HasPrefix(part, "SignedHeaders=") {
+			headers := strings.TrimPrefix(part, "SignedHeaders=")
+			parsed.SignedHeadersStr = headers
+			parsed.SignedHeaders = make(map[string]string)
+			tmpHeaders := strings.Split(headers, ";")
+			for _, tmpHeader := range tmpHeaders {
+				parsed.SignedHeaders[tmpHeader] = ""
+			}
+		} else if strings.HasPrefix(part, "Signature=") {
+			parsed.Signature = strings.TrimPrefix(part, "Signature=")
+		}
+	}
+
+	return parsed, nil
 }
