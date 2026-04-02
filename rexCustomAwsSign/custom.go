@@ -5,18 +5,23 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"fmt"
-	"github.com/rootexit/rexLib/rexHeaders"
-	"github.com/zeromicro/go-zero/core/logx"
 	"net/http"
 	"sort"
 	"strings"
 	"time"
+
+	"github.com/rootexit/rexLib/rexHeaders"
+	"github.com/zeromicro/go-zero/core/logx"
 )
 
 /*
 	note: 这个签名部分主要是借鉴aws的V4签名，相关文档可以访问，我愿称之为《伟大的杰作》
 	https://docs.aws.amazon.com/IAM/latest/UserGuide/reference_sigv-create-signed-request.html
 */
+
+const (
+	AWSAuthHeaderPrefix = "AWS4-HMAC-SHA256"
+)
 
 type (
 	CustomSigner interface {
@@ -76,7 +81,7 @@ func NewCustomSigner(shortName string, version uint) CustomSigner {
 			Debug:                   false,
 			DeriveKeyPrefix:         "AWS4",
 			TimeFormat:              "20060102T150405Z",
-			AuthHeaderPrefix:        "AWS4-HMAC-SHA256",
+			AuthHeaderPrefix:        AWSAuthHeaderPrefix,
 			ShortTimeFormat:         "20060102",
 			VersionRequest:          "aws4_request",
 			EmptyStringSHA256:       "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
