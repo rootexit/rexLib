@@ -2,26 +2,30 @@ package rexMiddleware
 
 import (
 	"context"
+	"net/http"
+	"time"
+
 	"github.com/rootexit/rexLib/rexCtx"
 	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/ua-parser/uap-go/uaparser"
 	"github.com/zeromicro/go-zero/core/logc"
-	"net/http"
-	"time"
 )
 
 type UaParserInterceptorMiddleware struct {
 	Uaparser *uaparser.Parser
+	debug    bool
 }
 
-func NewUaParserInterceptorMiddleware(uaparser *uaparser.Parser) *UaParserInterceptorMiddleware {
+func NewUaParserInterceptorMiddleware(uaparser *uaparser.Parser, isDebug bool) *UaParserInterceptorMiddleware {
 	return &UaParserInterceptorMiddleware{
 		Uaparser: uaparser,
+		debug:    isDebug,
 	}
 }
 
 func (m *UaParserInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
+		startTime := time.Now()
 
 		ctx := r.Context()
 
@@ -32,8 +36,10 @@ func (m *UaParserInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		} else {
 			userAgent = ctx.Value(rexCtx.CtxUserAgent{}).(string)
 		}
+		if m.debug {
+			logc.Infof(ctx, "UaParserInterceptorMiddleware userAgent: %s", userAgent)
+		}
 
-		startTime := time.Now()
 		client := m.Uaparser.Parse(userAgent)
 		ctx = context.WithValue(ctx, rexCtx.CtxUserAgentFamily{}, client.UserAgent.Family)
 		ctx = context.WithValue(ctx, rexCtx.CtxUserAgentMajor{}, client.UserAgent.Major)
@@ -50,7 +56,9 @@ func (m *UaParserInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		ctx = context.WithValue(ctx, rexCtx.CtxDeviceBrand{}, client.Device.Brand)
 		ctx = context.WithValue(ctx, rexCtx.CtxDeviceModel{}, client.Device.Model)
 		endTime := time.Now()
-		logc.Infof(ctx, "设备解析中间件耗时: %v", endTime.Sub(startTime).Milliseconds())
+		if m.debug {
+			logc.Infof(ctx, "UaParserInterceptorMiddleware time consumption: %s", endTime.Sub(startTime).String())
+		}
 
 		r = r.WithContext(ctx)
 		next(w, r)

@@ -9,11 +9,6 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/gin-gonic/gin"
-	"github.com/go-playground/validator/v10"
-	"github.com/rootexit/rexLib/rexCrypto"
-	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/peer"
 	"io"
 	"io/ioutil"
 	"log"
@@ -29,6 +24,12 @@ import (
 	"strconv"
 	"strings"
 	"time"
+
+	"github.com/gin-gonic/gin"
+	"github.com/go-playground/validator/v10"
+	"github.com/rootexit/rexLib/rexCrypto"
+	"github.com/zeromicro/go-zero/core/logx"
+	"google.golang.org/grpc/peer"
 )
 
 /**
@@ -82,7 +83,7 @@ func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
 			// note: ipv6带端口
 			host, p, err := net.SplitHostPort(ipStr)
 			if err != nil {
-				logx.Errorf("❌ 无效的带端口 IPv6: %s", err)
+				logx.Errorf("❌ Invalid IPv6 with port: %s", err)
 				return ip, port, ipType, err
 			}
 			ip = host
@@ -96,7 +97,7 @@ func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
 		if strings.Contains(ipStr, ":") {
 			host, p, err := net.SplitHostPort(ipStr)
 			if err != nil {
-				logx.Errorf("❌ 无效的带端口 IPv6: %s", err)
+				logx.Errorf("❌ Invalid IPv6 with port: %s", err)
 				return ip, port, ipType, err
 			}
 			ip = host
@@ -111,7 +112,7 @@ func ReturnIpAndPort(ipStr string) (ip, port, ipType string, err error) {
 	// 解析 IP
 	netIp := net.ParseIP(strings.Trim(ip, "[]"))
 	if netIp == nil {
-		logx.Errorf("❌ 无效的 IP 地址")
+		logx.Errorf("❌ unknown ip format: %s", ip)
 		return ip, port, ipType, errors.New("unknown ip format")
 	}
 	// 类型判断
