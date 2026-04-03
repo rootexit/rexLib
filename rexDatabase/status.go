@@ -27,7 +27,7 @@ const (
 
 type CommonContentStatus int32
 
-// note: 文章状态, 1->预草稿,2->草稿,3->提审,4->驳回,5->下架,6->上架（仅列表）,7->仅置顶,8->推荐(置顶+列表)
+// note: 文章状态, 1->预草稿,2->草稿,3->提审,4->驳回,5->下架,6->上架但不公示,7->上架（仅列表,8->仅置顶,9->推荐(置顶+列表)
 
 const (
 	ContentStatusPreDraft CommonContentStatus = iota + 1
