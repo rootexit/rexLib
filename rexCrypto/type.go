@@ -120,3 +120,33 @@ const (
 	AesCTR192 = "AES-192-CTR"
 	AesCTR256 = "AES-256-CTR"
 )
+
+const (
+	KmsAlgorithmAES   = "AES"
+	KmsAlgorithmRSA   = "RSA"
+	KmsAlgorithmECDSA = "EC"
+	KmsAlgorithmHMAC  = "HMAC"
+	KmsAlgorithmSHA   = "SHA"
+
+	KmsAlgorithmAESBit128 = 128
+	KmsAlgorithmAESBit192 = 192
+	KmsAlgorithmAESBit256 = 256
+
+	KmsAlgorithmRSABit1024 = 1024
+	KmsAlgorithmRSABit2048 = 2048
+	KmsAlgorithmRSABit3072 = 3072
+	KmsAlgorithmRSABit4096 = 4096
+
+	KmsAlgorithmECDSABitP224 = "P224"
+	KmsAlgorithmECDSABitP256 = "P256"
+	KmsAlgorithmECDSABitP384 = "P384"
+	KmsAlgorithmECDSABitP521 = "P521"
+
+	KmsAlgorithmShaBit256 = 256
+	KmsAlgorithmShaBit512 = 512
+
+	KmsAlgorithmAESTypeGCM = "GCM"
+	KmsAlgorithmAESTypeCBC = "CBC"
+	KmsAlgorithmAESTypeCCM = "CCM"
+	KmsAlgorithmAESTypeCTR = "CTR"
+)
