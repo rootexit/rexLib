@@ -135,5 +135,7 @@ type CropperExtraOptions struct {
 	MaxMode      CropperExtraOptionsMaxMode `gorm:"column:max_mode;comment:最大尺寸限制模式;type:smallint;default:1" json:"max_mode"`
 	MaxWidth     int64                      `gorm:"column:max_width;comment:最大宽度;type: bigint;default:0" json:"max_width"`
 	MaxHeight    int64                      `gorm:"column:max_height;comment:最大高度;type: bigint;default:0" json:"max_height"`
+	MinWidth     int64                      `gorm:"column:min_width;comment:最小宽度;type: bigint;default:0" json:"min_width"`
+	MinHeight    int64                      `gorm:"column:min_height;comment:最小高度;type: bigint;default:0" json:"min_height"`
 	BorderRadius float64                    `gorm:"column:border_radius;comment:边框半径,百分比，保留2位小数，和是否圆形参数冲突;type:float;default:0" json:"border_radius"`
 }
