@@ -156,6 +156,9 @@ const (
 	EngineStatusKmsNotInit                    int32 = 4055  // 语义: 租户的kms尚未完成初始化
 	EngineStatusFunctionUnavailable           int32 = 4056  // 语义: 功能不可用
 	EngineStatusCodeInvalid                   int32 = 4057  // 语义: 验证码错误
+	EngineStatusCodeExpired                   int32 = 4058  // 语义: 验证码已过期
+	EngineStatusCodeUsed                      int32 = 4059  // 语义: 验证码已过期
+	EngineStatusCodeRevoked                   int32 = 4060  // 语义: 验证码已被失效
 	EngineStatusInternalServerError           int32 = 5000  // 语义: 服务器内部错误，无法完成请求
 	EngineStatusNotImplemented                int32 = 5001  // 语义: 服务器不支持请求的功能，无法完成请求
 	EngineStatusBadGateway                    int32 = 5002  // 语义: 作为网关或者代理工作的服务器尝试执行请求时，从远程服务器接收到了一个无效的响应
