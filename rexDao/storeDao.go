@@ -3,10 +3,11 @@ package rexDao
 import (
 	"context"
 	"errors"
-	"github.com/redis/go-redis/v9"
-	"github.com/rootexit/rexLib/rexStore"
 	"log"
 	"time"
+
+	"github.com/redis/go-redis/v9"
+	"github.com/rootexit/rexLib/rexStore"
 )
 
 type (
@@ -30,6 +31,8 @@ type (
 		DelCtx(ctx context.Context, keys ...string) (int, error)
 		Keys(pattern string) ([]string, error)
 		KeysCtx(ctx context.Context, pattern string) ([]string, error)
+		MGet(keys []string) ([]string, error)
+		MGetCtx(ctx context.Context, keys []string) ([]string, error)
 	}
 	defaultRedisDao struct {
 		rd *redis.Client
@@ -169,4 +172,30 @@ func (d *defaultRedisDao) Keys(pattern string) ([]string, error) {
 // KeysCtx is the implementation of redis keys command.
 func (d *defaultRedisDao) KeysCtx(ctx context.Context, pattern string) ([]string, error) {
 	return d.rd.Keys(ctx, pattern).Result()
+}
+
+func (d *defaultRedisDao) MGet(keys []string) ([]string, error) {
+	return d.MGetCtx(context.Background(), keys)
+}
+
+// KeysCtx is the implementation of redis keys command.
+func (d *defaultRedisDao) MGetCtx(ctx context.Context, keys []string) ([]string, error) {
+	val, err := d.rd.MGet(ctx, keys...).Result()
+	if err != nil {
+		return nil, err
+	}
+	// note: 去除空
+	result := []string{}
+	for _, v := range val {
+		if v == nil {
+			continue
+		}
+		s, ok := v.(string)
+		if !ok {
+			continue
+		}
+		result = append(result, s)
+
+	}
+	return result, nil
 }
