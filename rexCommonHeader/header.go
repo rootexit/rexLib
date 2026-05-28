@@ -21,4 +21,5 @@ const (
 	HeaderXAdminIDFor  = "X-AdminId-For"
 	HeaderXTenantIDFor = "X-TenantId-For"
 	HeaderXDomainIDFor = "X-DomainId-For"
+	HeaderDeviceIdFor  = "X-DeviceId-For"
 )

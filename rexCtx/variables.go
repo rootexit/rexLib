@@ -50,4 +50,6 @@ type (
 	CtxDeviceFamily    struct{}
 	CtxDeviceBrand     struct{}
 	CtxDeviceModel     struct{}
+
+	CtxFingerprint struct{}
 )
