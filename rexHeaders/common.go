@@ -27,4 +27,5 @@ const (
 	// note: 模仿aws签名算法实现的头
 	HeaderXRExDate          = "X-REx-Date"
 	HeaderXRExContentSha256 = "X-REx-Content-Sha256"
+	HeaderXDeviceIdFor      = "X-DeviceId-For"
 )
