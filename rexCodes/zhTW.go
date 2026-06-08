@@ -150,6 +150,7 @@ var WrongMessageZhTW = map[int32]string{
 	EngineStatusCodeExpired:                   "验证码已过期",
 	EngineStatusCodeUsed:                      "验证码已被使用",
 	EngineStatusCodeRevoked:                   "验证码已被撤销",
+	EngineStatusAccountRiskLocked:             "账号存在异常行为，已被风险系统锁定",
 	EngineStatusInternalServerError:           "服务器内部错误，无法完成请求",
 	EngineStatusNotImplemented:                "服务器不支持请求的功能，无法完成请求",
 	EngineStatusBadGateway:                    "作为网关或者代理工作的服务器尝试执行请求时，从远程服务器接收到了一个无效的响应",

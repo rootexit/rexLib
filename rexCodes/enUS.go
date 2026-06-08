@@ -150,6 +150,7 @@ var WrongMessageEnUS = map[int32]string{
 	EngineStatusCodeExpired:                   "Code Expired",
 	EngineStatusCodeUsed:                      "Code Used",
 	EngineStatusCodeRevoked:                   "Code Revoked",
+	EngineStatusAccountRiskLocked:             "Account risk locked",
 	EngineStatusInternalServerError:           "Internal Server Error",
 	EngineStatusNotImplemented:                "Not Implemented",
 	EngineStatusBadGateway:                    "Bad Gateway",
