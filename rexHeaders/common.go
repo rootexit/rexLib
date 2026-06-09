@@ -34,4 +34,5 @@ const (
 	HeaderXRExTaskSourceId   = "X-REx-Task-Source-Id"
 	HeaderXRExTaskTimestamp  = "X-REx-Task-Timestamp"
 	HeaderXRExTaskSignature  = "X-REx-Task-Signature"
+	HeaderXRExTaskNonce      = "X-REx-Task-Nonce"
 )
