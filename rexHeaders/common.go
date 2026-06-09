@@ -28,4 +28,10 @@ const (
 	HeaderXRExDate          = "X-REx-Date"
 	HeaderXRExContentSha256 = "X-REx-Content-Sha256"
 	HeaderXDeviceIdFor      = "X-DeviceId-For"
+
+	HeaderXRExTaskDeliveryId = "X-REx-Task-Delivery-Id"
+	HeaderXRExTaskSourceType = "X-REx-Task-Source-Type"
+	HeaderXRExTaskSourceId   = "X-REx-Task-Source-Id"
+	HeaderXRExTaskTimestamp  = "X-REx-Task-Timestamp"
+	HeaderXRExTaskSignature  = "X-REx-Task-Signature"
 )

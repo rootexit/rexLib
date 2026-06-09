@@ -157,7 +157,7 @@ const (
 	EngineStatusFunctionUnavailable           int32 = 4056  // 语义: 功能不可用
 	EngineStatusCodeInvalid                   int32 = 4057  // 语义: 验证码错误
 	EngineStatusCodeExpired                   int32 = 4058  // 语义: 验证码已过期
-	EngineStatusCodeUsed                      int32 = 4059  // 语义: 验证码已过期
+	EngineStatusCodeUsed                      int32 = 4059  // 语义: 验证码已被使用
 	EngineStatusCodeRevoked                   int32 = 4060  // 语义: 验证码已被失效
 	EngineStatusAccountRiskLocked             int32 = 4061  // 语义: 账号存在异常行为，已被风险系统锁定
 	EngineStatusInternalServerError           int32 = 5000  // 语义: 服务器内部错误，无法完成请求
