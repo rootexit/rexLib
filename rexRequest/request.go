@@ -2,6 +2,7 @@ package rexRequest
 
 import (
 	"bytes"
+	"context"
 	"crypto/tls"
 	"encoding/json"
 	"fmt"
@@ -23,6 +24,7 @@ type (
 		PostSyncJson(url string, sendBody interface{}) func() ([]byte, error)
 		PostSyncJsonWithHeaders(url string, sendBody interface{}, headers map[string]string) func() ([]byte, error)
 		PostSyncJsonBodyWithHeaders(url string, jsonBody string, headers map[string]string) func() ([]byte, error)
+		PostJsonWithHeaders(ctx context.Context, url string, sendBody any, headers map[string]string) (*http.Response, error)
 		PostSyncJsonWithFile(url string, fileFieldName, fileName string, file io.Reader, fields map[string]string) func() ([]byte, error)
 		Put(url, contentType string, body io.Reader) (resp *http.Response, err error)
 		PutSyncJson(url string, sendBody interface{}) func() ([]byte, error)
@@ -240,6 +242,36 @@ func (c *requestClient) PostSyncJsonBodyWithHeaders(url string, jsonBody string,
 		}
 		return body, err
 	}
+}
+
+func (c *requestClient) PostJsonWithHeaders(ctx context.Context, url string, sendBody any, headers map[string]string) (*http.Response, error) {
+
+	sendBodyBt, err := json.Marshal(sendBody)
+	if err != nil {
+		return nil, err
+	}
+	req, err := http.NewRequestWithContext(ctx, http.MethodPost, url, bytes.NewReader(sendBodyBt))
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("Content-Type", "application/json")
+	for key, val := range headers {
+		req.Header.Set(key, val)
+	}
+	res, err := c.client.Do(req)
+	if err != nil {
+		return nil, err
+	}
+	// defer res.Body.Close()
+	// body, err := io.ReadAll(res.Body)
+	// if err != nil {
+	// 	return HttpResponse{
+	// 		StatusCode: res.StatusCode,
+	// 		Header:     res.Header.Clone(),
+	// 	}, err
+	// }
+	return res, nil
+
 }
 
 func (c *requestClient) PostSyncJsonWithFile(url string, fileFieldName, fileName string, file io.Reader, fields map[string]string) func() ([]byte, error) {
