@@ -148,7 +148,7 @@ func (c *requestClient) PostSyncJson(url string, sendBody interface{}) func() ([
 		}
 
 		defer res.Body.Close()
-		body, err = ioutil.ReadAll(res.Body)
+		body, err = io.ReadAll(res.Body)
 		return
 	}()
 	return func() ([]byte, error) {
@@ -192,7 +192,7 @@ func (c *requestClient) PostSyncJsonWithHeaders(url string, sendBody interface{}
 		}
 
 		defer res.Body.Close()
-		body, err = ioutil.ReadAll(res.Body)
+		body, err = io.ReadAll(res.Body)
 		return
 	}()
 	return func() ([]byte, error) {
