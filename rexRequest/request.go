@@ -39,7 +39,7 @@ type (
 func NewRequestClient() RequestClient {
 	return &requestClient{
 		client: &http.Client{
-			Timeout: 30 * time.Second,
+			Timeout: 3 * time.Second,
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{InsecureSkipVerify: true},
 			},
@@ -71,7 +71,7 @@ func (c *requestClient) HeadSync(url string) func() ([]byte, error) {
 		}
 
 		defer res.Body.Close()
-		body, err = ioutil.ReadAll(res.Body)
+		body, err = io.ReadAll(res.Body)
 		return
 	}()
 	return func() ([]byte, error) {
@@ -314,7 +314,7 @@ func (c *requestClient) PostSyncJsonWithFile(url string, fileFieldName, fileName
 		}
 
 		defer res.Body.Close()
-		body, err = ioutil.ReadAll(res.Body)
+		body, err = io.ReadAll(res.Body)
 		return
 	}()
 	return func() ([]byte, error) {
@@ -396,7 +396,7 @@ func (c *requestClient) DeleteSync(url string) func() ([]byte, error) {
 		}
 
 		defer res.Body.Close()
-		body, err = ioutil.ReadAll(res.Body)
+		body, err = io.ReadAll(res.Body)
 		return
 	}()
 	return func() ([]byte, error) {
