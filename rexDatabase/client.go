@@ -11,6 +11,10 @@ type ClientNetwork struct {
 	Port      string `gorm:"column:port;comment:端口;type: varchar(64);" json:"port"`                // Port
 	Network   string `gorm:"column:network;comment:网关数据;type: varchar(255);" json:"network"`       // Network
 	Isp       string `gorm:"column:isp;comment:ISP;type: varchar(64);" json:"isp"`                 // ISP
+	// AutonomousSystemOrganization for the registered autonomous system number.
+	AutonomousSystemOrganization string `gorm:"column:autonomous_system_organization;comment:针对已注册自治系统编号的自治系统组织。;type: varchar(255);" json:"autonomous_system_organization"` //nolint:lll
+	// AutonomousSystemNumber for the IP address.
+	AutonomousSystemNumber uint `gorm:"column:autonomous_system_number;comment:该 IP 地址的自治系统号;type: varchar(64);"  json:"autonomous_system_number"` //nolint:lll
 }
 
 type ClientLocation struct {

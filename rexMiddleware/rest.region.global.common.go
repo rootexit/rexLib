@@ -126,10 +126,12 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 		}
 		clientInfo = rexDatabase.Client{
 			ClientNetwork: rexDatabase.ClientNetwork{
-				IpAddress: clientIp,
-				Port:      clientPort,
-				Network:   asn.Network.String(),
-				Isp:       "unknown",
+				IpAddress:                    clientIp,
+				Port:                         clientPort,
+				Network:                      asn.Network.String(),
+				Isp:                          "unknown",
+				AutonomousSystemOrganization: asn.AutonomousSystemOrganization,
+				AutonomousSystemNumber:       asn.AutonomousSystemNumber,
 			},
 			ClientLocation: rexDatabase.ClientLocation{
 				Continent:      city.Continent.Names.SimplifiedChinese,
@@ -141,7 +143,8 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 				TimeZone:       city.Location.TimeZone,
 				AccuracyRadius: city.Location.AccuracyRadius,
 			},
-			ClientUa: rexDatabase.ClientUa{},
+			ClientUa:  rexDatabase.ClientUa{},
+			ClientBot: rexDatabase.ClientBot{},
 		}
 		if len(city.Subdivisions) > 0 {
 			tmpSubdivisions := make([]string, len(city.Subdivisions))
