@@ -2,6 +2,7 @@ package rexMiddleware
 
 import (
 	"context"
+	"encoding/json"
 	"net/http"
 	"net/netip"
 	"strings"
@@ -39,6 +40,7 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 
 		clientIp := ""
 		clientPort := ""
+		clientInfo := rexDatabase.Client{}
 		if ctx.Value(rexCtx.CtxClientIp{}) == nil {
 			fullAddr := rexCommon.GetRemoteClientAddr(r)
 			ips := strings.Split(fullAddr, ",")
@@ -60,6 +62,44 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			clientIp = ctx.Value(rexCtx.CtxClientIp{}).(string)
 			clientPort = ctx.Value(rexCtx.CtxClientPort{}).(string)
 		}
+		if m.debug {
+			logc.Infof(ctx, "RegionInterceptorMiddleware clientIp: %s", clientIp)
+		}
+
+		internal, reason, err := rexCommon.IsInternalIP(clientIp)
+		if err != nil {
+			logc.Errorf(ctx, "RegionInterceptorMiddleware unknown ip format: %s", err)
+			http.Error(w, "Unknown IP format", http.StatusNotImplemented)
+			return
+		}
+		if internal {
+			clientInfo = rexDatabase.Client{
+				ClientNetwork: rexDatabase.ClientNetwork{
+					IpAddress: clientIp,
+					Port:      clientPort,
+					Network:   reason,
+					Isp:       reason,
+				},
+				ClientLocation: rexDatabase.ClientLocation{
+					Continent:      "内网",
+					Country:        "内网",
+					Province:       "内网",
+					City:           "内网",
+					Longitude:      0,
+					Latitude:       0,
+					TimeZone:       "localhost",
+					AccuracyRadius: 0,
+				},
+			}
+			ctx = context.WithValue(ctx, rexCtx.CtxClientInfo{}, clientInfo)
+			endTime := time.Now()
+			if m.debug {
+				logc.Infof(ctx, "RegionInterceptorMiddleware time consumption: %s", endTime.Sub(startTime).String())
+			}
+			r = r.WithContext(ctx)
+			next(w, r)
+			return
+		}
 
 		ip, err := netip.ParseAddr(clientIp)
 		if err != nil {
@@ -80,7 +120,11 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			http.Error(w, "Unknown IP format", http.StatusNotImplemented)
 			return
 		}
-		clientInfo := rexDatabase.Client{
+		if m.debug {
+			asnJson, _ := json.Marshal(asn)
+			logc.Infof(ctx, "RegionInterceptorMiddleware asn: %v", string(asnJson))
+		}
+		clientInfo = rexDatabase.Client{
 			ClientNetwork: rexDatabase.ClientNetwork{
 				IpAddress: clientIp,
 				Port:      clientPort,
@@ -118,7 +162,7 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 		if m.debug {
 			logc.Infof(ctx, "RegionInterceptorMiddleware Country ISOCode: %s", city.Country.ISOCode)
 		}
-		if city.Country.ISOCode != "CN" {
+		if city.Country.ISOCode == "CN" {
 			// 中国
 			info, err := m.region.MemorySearch(clientIp)
 			if err != nil {
@@ -131,7 +175,6 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			clientInfo.ClientLocation.Province = info.Province
 			clientInfo.ClientLocation.City = info.City
 		}
-
 		ctx = context.WithValue(ctx, rexCtx.CtxClientInfo{}, clientInfo)
 		endTime := time.Now()
 		if m.debug {

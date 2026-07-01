@@ -15,6 +15,7 @@ import (
 	"mime/multipart"
 	"net"
 	"net/http"
+	"net/netip"
 	"net/url"
 	"os"
 	"path/filepath"
@@ -43,6 +44,27 @@ var (
 		Timeout: 30 * time.Second,
 	}
 )
+
+func IsInternalIP(ipStr string) (bool, string, error) {
+	addr, err := netip.ParseAddr(strings.TrimSpace(ipStr))
+	if err != nil {
+		return false, "", err
+	}
+
+	switch {
+	case addr.IsLoopback():
+		return true, "loopback", nil
+	case addr.IsPrivate():
+		return true, "private", nil
+	case addr.IsLinkLocalUnicast():
+		return true, "link_local_unicast", nil
+	case addr.IsLinkLocalMulticast():
+		return true, "link_local_multicast", nil
+	case addr.IsUnspecified():
+		return true, "unspecified", nil
+	}
+	return false, "public", nil
+}
 
 func GetRemoteClientAddr(r *http.Request) string {
 	if xff := r.Header.Get(rexHeaders.HeaderXForwardedFor); len(xff) > 0 {
