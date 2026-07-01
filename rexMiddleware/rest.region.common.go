@@ -10,7 +10,6 @@ import (
 	"github.com/rootexit/rexLib/rexCommon"
 	"github.com/rootexit/rexLib/rexCtx"
 	"github.com/zeromicro/go-zero/core/logc"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 type RegionInterceptorMiddleware struct {
@@ -33,10 +32,7 @@ func (m *RegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handler
 
 		clientIp := ""
 		if ctx.Value(rexCtx.CtxClientIp{}) == nil {
-			fullAddr := httpx.GetRemoteAddr(r)
-			if m.debug {
-				logc.Infof(ctx, "RegionInterceptorMiddleware fullAddr :%v", fullAddr)
-			}
+			fullAddr := rexCommon.GetRemoteClientAddr(r)
 			ips := strings.Split(fullAddr, ",")
 			realAddr := ips[0]
 			ip, port, ipType, err := rexCommon.ReturnIpAndPort(realAddr)
@@ -51,15 +47,12 @@ func (m *RegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handler
 
 			ctx = context.WithValue(ctx, rexCtx.CtxClientIp{}, ip)
 			ctx = context.WithValue(ctx, rexCtx.CtxClientPort{}, port)
-			logc.Infof(ctx, "IP: %s, Port: %s", ip, port)
-			if err != nil {
-				logc.Errorf(ctx, "RegionInterceptorMiddleware parse ip err: %s", err)
-				http.Error(w, "Unsupported IP types", http.StatusNotImplemented)
-				return
-			}
+			logc.Infof(ctx, "RegionInterceptorMiddleware Ip: %s, Port: %s", ip, port)
 		} else {
 			clientIp = ctx.Value(rexCtx.CtxClientIp{}).(string)
 		}
+
+		// note: 判断是否是国内的还是国外的IP地址
 
 		info, _ := m.Region.MemorySearch(clientIp)
 		ctx = context.WithValue(ctx, rexCtx.CtxCityId{}, info.CityId)

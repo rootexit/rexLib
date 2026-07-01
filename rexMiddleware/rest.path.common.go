@@ -11,7 +11,6 @@ import (
 	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/rootexit/rexLib/rexUlid"
 	"github.com/zeromicro/go-zero/core/logc"
-	"github.com/zeromicro/go-zero/rest/httpx"
 )
 
 type PathHttpInterceptorMiddleware struct {
@@ -33,10 +32,7 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		ctx = context.WithValue(ctx, rexCtx.CtxRequestURI{}, r.RequestURI)
 		ctx = context.WithValue(ctx, rexCtx.CtxStartTime{}, startTime.UnixMilli())
 
-		fullAddr := httpx.GetRemoteAddr(r)
-		if m.debug {
-			logc.Infof(ctx, "PathHttpInterceptorMiddleware fullAddr :%v", fullAddr)
-		}
+		fullAddr := rexCommon.GetRemoteClientAddr(r)
 		ips := strings.Split(fullAddr, ",")
 		realAddr := ips[0]
 		ip, port, ipType, err := rexCommon.ReturnIpAndPort(realAddr)
@@ -51,12 +47,8 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		ctx = context.WithValue(ctx, rexCtx.CtxClientIp{}, ip)
 		ctx = context.WithValue(ctx, rexCtx.CtxClientPort{}, port)
 		ctx = context.WithValue(ctx, rexCtx.CtxClientType{}, ipType)
-		if err != nil {
-			logc.Errorf(ctx, "PathHttpInterceptorMiddleware parse ip err: %s", err)
-			http.Error(w, "Unsupported IP types", http.StatusNotImplemented)
-			return
-		}
 
+		// note: is inherit request_id
 		requestID := rexUlid.NewString()
 		if m.isAllowedInheritRequestId {
 			if r.Header.Get(rexHeaders.HeaderXRequestIdFor) != "" {

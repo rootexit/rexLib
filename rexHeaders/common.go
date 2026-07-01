@@ -16,6 +16,7 @@ const (
 	HeaderXRequestIdFor  = "X-RequestId-For"
 	HeaderXClientIdFor   = "X-ClientId-For"
 	HeaderXForwardedFor  = "X-Forwarded-For"
+	HeaderXRealIP        = "X-Real-IP"
 	HeaderUserAgent      = "User-Agent"
 	HeaderAcceptEncoding = "Accept-Encoding"
 	HeaderConnection     = "Connection"

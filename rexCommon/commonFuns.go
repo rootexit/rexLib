@@ -2,7 +2,6 @@ package rexCommon
 
 import (
 	"bytes"
-	"context"
 	"crypto/rand"
 	"crypto/sha1"
 	"encoding/hex"
@@ -28,8 +27,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"github.com/rootexit/rexLib/rexCrypto"
+	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/zeromicro/go-zero/core/logx"
-	"google.golang.org/grpc/peer"
 )
 
 /**
@@ -44,6 +43,18 @@ var (
 		Timeout: 30 * time.Second,
 	}
 )
+
+func GetRemoteClientAddr(r *http.Request) string {
+	if xff := r.Header.Get(rexHeaders.HeaderXForwardedFor); len(xff) > 0 {
+		return xff
+	}
+
+	if xrip := r.Header.Get(rexHeaders.HeaderXRealIP); len(xrip) > 0 {
+		return xrip
+	}
+	host, port, _ := net.SplitHostPort(r.RemoteAddr)
+	return fmt.Sprintf("%s:%s", host, port)
+}
 
 // RandStringRunes 返回一个指定长度的随机字符串（包含数字+大小写字母）
 func RandStringRunes(n int) string {
@@ -602,18 +613,6 @@ func GenValidateCode(width int) string {
 		sb.WriteByte('0' + byte(n.Int64())) // 转为字符 '0'...'9'
 	}
 	return sb.String()
-}
-
-func GetClientIP(ctx context.Context) (string, error) {
-	pr, ok := peer.FromContext(ctx)
-	if !ok {
-		return "", fmt.Errorf("[getClinetIP] invoke FromContext() failed")
-	}
-	if pr.Addr == net.Addr(nil) {
-		return "", fmt.Errorf("[getClientIP] peer.Addr is nil")
-	}
-	addSlice := strings.Split(pr.Addr.String(), ":")
-	return addSlice[0], nil
 }
 
 // 进行Sha1编码

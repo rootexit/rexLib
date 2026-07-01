@@ -4,6 +4,7 @@ type (
 	CtxSiteDomain    struct{}
 	CtxStartTime     struct{}
 	CtxXForwardedFor struct{}
+	CtxClientInfo    struct{}
 	CtxClientIp      struct{}
 	CtxClientPort    struct{}
 	CtxClientType    struct{}
