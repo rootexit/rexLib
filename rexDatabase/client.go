@@ -42,8 +42,15 @@ type ClientUa struct {
 	DeviceModel     string `gorm:"column:device_model;comment:DeviceModel;type: varchar(64);" json:"device_model"`
 }
 
+type ClientBot struct {
+	IsBot       bool   `json:"is_bot"`
+	BotName     string `json:"bot_name"`
+	BotCategory string `json:"bot_category"`
+}
+
 type Client struct {
 	ClientNetwork
 	ClientLocation
 	ClientUa
+	ClientBot
 }
