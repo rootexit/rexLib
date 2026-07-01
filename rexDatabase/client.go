@@ -43,9 +43,10 @@ type ClientUa struct {
 }
 
 type ClientBot struct {
-	IsBot       bool   `json:"is_bot"`
-	BotName     string `json:"bot_name"`
-	BotCategory string `json:"bot_category"`
+	IsBot       bool   `gorm:"column:is_bot;comment:是否机器人;type: boolean;" json:"is_bot"`
+	BotName     string `gorm:"column:bot_name;comment:机器人名称;type: varchar(255);" json:"bot_name"`
+	BotCategory string `gorm:"column:bot_category;comment:机器人类别;type: varchar(255);" json:"bot_category"`
+	BotReason   string `gorm:"column:bot_reason;comment:机器人原因;type: varchar(255);" json:"bot_reason"`
 }
 
 type Client struct {
