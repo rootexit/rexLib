@@ -115,6 +115,9 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			clientInfo.ClientLocation.Longitude = *city.Location.Longitude
 			clientInfo.ClientLocation.Latitude = *city.Location.Latitude
 		}
+		if m.debug {
+			logc.Infof(ctx, "RegionInterceptorMiddleware Country ISOCode: %s", city.Country.ISOCode)
+		}
 		if city.Country.ISOCode != "CN" {
 			// 中国
 			info, err := m.region.MemorySearch(clientIp)

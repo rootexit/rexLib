@@ -52,8 +52,11 @@ func GetRemoteClientAddr(r *http.Request) string {
 	if xrip := r.Header.Get(rexHeaders.HeaderXRealIP); len(xrip) > 0 {
 		return xrip
 	}
-	host, port, _ := net.SplitHostPort(r.RemoteAddr)
-	return fmt.Sprintf("%s:%s", host, port)
+	host, port, err := net.SplitHostPort(r.RemoteAddr)
+	if err != nil {
+		return r.RemoteAddr
+	}
+	return net.JoinHostPort(host, port)
 }
 
 // RandStringRunes 返回一个指定长度的随机字符串（包含数字+大小写字母）

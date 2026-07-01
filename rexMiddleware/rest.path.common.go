@@ -35,6 +35,9 @@ func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.Handl
 		fullAddr := rexCommon.GetRemoteClientAddr(r)
 		ips := strings.Split(fullAddr, ",")
 		realAddr := ips[0]
+		if m.debug {
+			logc.Infof(ctx, "PathHttpInterceptorMiddleware realAddr: %s", realAddr)
+		}
 		ip, port, ipType, err := rexCommon.ReturnIpAndPort(realAddr)
 		if err != nil {
 			logc.Errorf(ctx, "PathHttpInterceptorMiddleware unknown ip format: %s", err)
