@@ -52,7 +52,8 @@ func JsonBaseResponseCtx(ctx context.Context, w http.ResponseWriter, r *http.Req
 	} else if strings.Contains(w.Header().Get(ContentType), ContentTypeText) {
 		// note: 因为大部分返回文本的时候都是直接返回，所以不需要写入
 	} else {
-		// note: 自行处理
+		// note: 默认按照json处理
+		httpx.OkJsonCtx(ctx, w, wrapBaseResponse(ctx, r, res, err))
 	}
 }
 
