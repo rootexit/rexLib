@@ -1,13 +1,31 @@
 package rexShortId
 
 import (
+	"crypto/rand"
 	"crypto/sha256"
+	"errors"
 	"fmt"
 	"math/big"
 )
 
 // Base62 字符表
 var charset = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+
+func ShortCode(length int) (string, error) {
+	if length <= 0 {
+		return "", errors.New("length must be greater than 0")
+	}
+	max := big.NewInt(int64(62))
+	buf := make([]byte, length)
+	for i := 0; i < length; i++ {
+		n, err := rand.Int(rand.Reader, max)
+		if err != nil {
+			return "", err
+		}
+		buf[i] = charset[n.Int64()]
+	}
+	return string(buf), nil
+}
 
 // 编码大整数为 base62 字符串
 func base62EncodeBigInt(n *big.Int) string {
