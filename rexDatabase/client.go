@@ -18,10 +18,14 @@ type ClientNetwork struct {
 }
 
 type ClientLocation struct {
-	Continent string `gorm:"column:continent;comment:洲;type: varchar(255);" json:"continent"`  // Continent
-	Country   string `gorm:"column:country;comment:国家;type: varchar(255);" json:"country"`     // Country
-	Province  string `gorm:"column:province;comment:行政区划;type: varchar(255);" json:"province"` // Province
-	City      string `gorm:"column:city;comment:城市;type: varchar(255);" json:"city"`           // City
+	Continent     string `gorm:"column:continent;comment:洲;type: varchar(255);" json:"continent"`             // Continent
+	ContinentCode string `gorm:"column:continent_code;comment:洲代码;type: varchar(255);" json:"continent_code"` // ContinentCode
+	Country       string `gorm:"column:country;comment:国家;type: varchar(255);" json:"country"`                // CountryCode
+	CountryCode   string `gorm:"column:country_code;comment:国家代码;type: varchar(255);" json:"country_code"`    // CountryCode
+	Province      string `gorm:"column:province;comment:行政区划;type: varchar(255);" json:"province"`            // Province
+	ProvinceCode  string `gorm:"column:province_code;comment:行政区划;type: varchar(255);" json:"province_code"`  // Province
+	City          string `gorm:"column:city;comment:城市;type: varchar(255);" json:"city"`                      // City
+	CityNameID    uint   `gorm:"column:city_name_id;comment:城市代码;type: varchar(255);" json:"city_name_id"`    // CityNameId
 
 	Longitude float64 `gorm:"column:longitude;comment:经度;type:double precision;" json:"longitude"` // Longitude
 	Latitude  float64 `gorm:"column:latitude;comment:纬度;type:double precision;" json:"latitude"`   // latitude

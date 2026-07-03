@@ -82,9 +82,13 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 				},
 				ClientLocation: rexDatabase.ClientLocation{
 					Continent:      "内网",
+					ContinentCode:  "INTRANET",
 					Country:        "内网",
+					CountryCode:    "INTRANET",
 					Province:       "内网",
+					ProvinceCode:   "INTRANET",
 					City:           "内网",
+					CityNameID:     0,
 					Longitude:      0,
 					Latitude:       0,
 					TimeZone:       "localhost",
@@ -135,9 +139,13 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			},
 			ClientLocation: rexDatabase.ClientLocation{
 				Continent:      city.Continent.Names.SimplifiedChinese,
+				ContinentCode:  city.Continent.Code,
 				Country:        city.Country.Names.SimplifiedChinese,
+				CountryCode:    city.Country.ISOCode,
 				Province:       "",
+				ProvinceCode:   "",
 				City:           city.City.Names.SimplifiedChinese,
+				CityNameID:     city.City.GeoNameID,
 				Longitude:      0,
 				Latitude:       0,
 				TimeZone:       city.Location.TimeZone,
@@ -148,11 +156,15 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 		}
 		if len(city.Subdivisions) > 0 {
 			tmpSubdivisions := make([]string, len(city.Subdivisions))
+			tmpSubdivisionCodes := make([]string, len(city.Subdivisions))
 			for i, subdivision := range city.Subdivisions {
 				tmpSubdivisions[i] = subdivision.Names.SimplifiedChinese
+				tmpSubdivisionCodes[i] = subdivision.ISOCode
 			}
 			tmpProvince := strings.Join(tmpSubdivisions, " ")
+			tmpProvinceCode := strings.Join(tmpSubdivisionCodes, "-")
 			clientInfo.ClientLocation.Province = tmpProvince
+			clientInfo.ClientLocation.ProvinceCode = tmpProvinceCode
 		} else if len(city.Subdivisions) == 1 {
 			clientInfo.ClientLocation.Province = city.Subdivisions[0].Names.SimplifiedChinese
 		} else {
