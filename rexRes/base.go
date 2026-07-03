@@ -2,6 +2,9 @@ package rexRes
 
 import (
 	"context"
+	"net/http"
+	"strings"
+
 	"github.com/aws/smithy-go/encoding/xml"
 	"github.com/google/uuid"
 	"github.com/rootexit/rexLib/rexCodes"
@@ -10,8 +13,6 @@ import (
 	"github.com/rootexit/rexLib/rexHeaders"
 	"github.com/zeromicro/go-zero/rest/httpx"
 	"google.golang.org/grpc/status"
-	"net/http"
-	"strings"
 )
 
 // BaseResponse is the base response struct.
@@ -44,10 +45,14 @@ func JsonBaseResponse(w http.ResponseWriter, r *http.Request, res any, err any) 
 
 // JsonBaseResponseCtx writes v into w with http.StatusOK.
 func JsonBaseResponseCtx(ctx context.Context, w http.ResponseWriter, r *http.Request, res any, err any) {
-	if strings.Contains(w.Header().Get(ContentType), ContentTypeHtml) {
-		// note: 因为大部分返回html的时候都是模板渲染，所以不需要写入
-	} else {
+	if strings.Contains(w.Header().Get(ContentType), ContentTypeJson) {
 		httpx.OkJsonCtx(ctx, w, wrapBaseResponse(ctx, r, res, err))
+	} else if strings.Contains(w.Header().Get(ContentType), ContentTypeHtml) {
+		// note: 因为大部分返回其他的时候都是模板渲染，所以不需要写入
+	} else if strings.Contains(w.Header().Get(ContentType), ContentTypeText) {
+		// note: 因为大部分返回文本的时候都是直接返回，所以不需要写入
+	} else {
+		// note: 自行处理
 	}
 }
 

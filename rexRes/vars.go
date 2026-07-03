@@ -13,5 +13,6 @@ const (
 
 	ContentType     = "Content-Type"
 	ContentTypeHtml = "text/html"
+	ContentTypeText = "text/plain"
 	ContentTypeJson = "application/json"
 )
