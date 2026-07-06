@@ -28,7 +28,7 @@ func NewPathHttpInterceptorMiddleware(isAllowedInheritRequestId, isDebug bool) *
 func (m *PathHttpInterceptorMiddleware) Handle(next http.HandlerFunc) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		startTime := time.Now()
-		ctx := context.WithValue(r.Context(), rexCtx.CtxFullMethod{}, r.URL.Path)
+		ctx := context.WithValue(r.Context(), rexCtx.CtxFullMethod{}, r.Method)
 		ctx = context.WithValue(ctx, rexCtx.CtxRequestURI{}, r.RequestURI)
 		ctx = context.WithValue(ctx, rexCtx.CtxStartTime{}, startTime.UnixMilli())
 

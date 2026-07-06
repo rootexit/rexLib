@@ -3,7 +3,7 @@ package rexDatabase
 type Device struct {
 	DeviceId      string `gorm:"column:device_id;comment:客户端ID;type:varchar(255);" json:"device_id"`         // 客户端ID
 	DeviceVersion string `gorm:"column:device_version;comment:设备版本;type:varchar(64);" json:"device_version"` // 设备版本
-	DeviceScore   string `gorm:"column:device_score;comment:设备评分;type:varchar(8);" json:"device_score"`      // 设备评分
+	DeviceScore   int    `gorm:"column:device_score;comment:设备评分*100;type:smallint;" json:"device_score"`    // 设备评分
 }
 
 type ClientNetwork struct {
