@@ -125,8 +125,8 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			return
 		}
 		if m.debug {
-			asnJson, _ := json.Marshal(asn)
-			logc.Infof(ctx, "RegionInterceptorMiddleware asn: %v", string(asnJson))
+			cityJson, _ := json.Marshal(city)
+			logc.Infof(ctx, "RegionInterceptorMiddleware cityJson: %v", string(cityJson))
 		}
 		clientInfo = rexDatabase.Client{
 			ClientNetwork: rexDatabase.ClientNetwork{
@@ -189,6 +189,10 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 			clientInfo.ClientLocation.Country = info.Country
 			clientInfo.ClientLocation.Province = info.Province
 			clientInfo.ClientLocation.City = info.City
+			clientInfo.ClientLocation.CityNameID = uint(info.CityId)
+			if m.debug {
+				logc.Infof(ctx, "RegionInterceptorMiddleware, geoip City: %s - CityNameId: %d, region City: %s - CityNameId: %d", city.City.Names.SimplifiedChinese, city.City.GeoNameID, info.City, uint(info.CityId))
+			}
 		}
 		ctx = context.WithValue(ctx, rexCtx.CtxClientInfo{}, clientInfo)
 		endTime := time.Now()
