@@ -1,30 +1,38 @@
 package rexDatabase
 
-type Operator string
+type ConditionOperator string
 
 const (
-	OpEq Operator = "eq"
-	OpNe Operator = "ne"
+	ConditionEq ConditionOperator = "eq"
+	ConditionNe ConditionOperator = "ne"
 
-	OpGt  Operator = "gt"
-	OpGte Operator = "gte"
-	OpLt  Operator = "lt"
-	OpLte Operator = "lte"
+	ConditionGt  ConditionOperator = "gt"
+	ConditionGte ConditionOperator = "gte"
+	ConditionLt  ConditionOperator = "lt"
+	ConditionLte ConditionOperator = "lte"
 
-	OpIn    Operator = "in"
-	OpNotIn Operator = "notIn"
+	ConditionIn    ConditionOperator = "in"
+	ConditionNotIn ConditionOperator = "notIn"
 
-	OpContains   Operator = "contains"
-	OpStartsWith Operator = "startsWith"
-	OpEndsWith   Operator = "endsWith"
+	ConditionContains   ConditionOperator = "contains"
+	ConditionStartsWith ConditionOperator = "startsWith"
+	ConditionEndsWith   ConditionOperator = "endsWith"
 
-	OpLike  Operator = "like"
-	OpILike Operator = "ilike"
+	ConditionLike  ConditionOperator = "like"
+	ConditionILike ConditionOperator = "ilike"
 
-	OpBetween Operator = "between"
+	ConditionBetween ConditionOperator = "between"
 
-	OpIsNull    Operator = "isNull"
-	OpIsNotNull Operator = "isNotNull"
+	ConditionIsNull    ConditionOperator = "isNull"
+	ConditionIsNotNull ConditionOperator = "isNotNull"
 
-	OpRegex Operator = "regex"
+	ConditionRegex ConditionOperator = "regex"
+)
+
+type LogicalOperator string
+
+const (
+	LogicalAnd LogicalOperator = "and"
+	LogicalOr  LogicalOperator = "or"
+	LogicalNot LogicalOperator = "not"
 )
