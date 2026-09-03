@@ -177,11 +177,11 @@ func (m *GlobalRegionInterceptorMiddleware) Handle(next http.HandlerFunc) http.H
 		if m.debug {
 			logc.Infof(ctx, "RegionInterceptorMiddleware Country ISOCode: %s", city.Country.ISOCode)
 		}
-		if city.Country.ISOCode == "CN" {
+		if city.Country.ISOCode == "CN" && ip.Is4() {
 			// 中国
 			info, err := m.region.MemorySearch(clientIp)
 			if err != nil {
-				logc.Errorf(ctx, "RegionInterceptorMiddleware unknown ip format: %s", err)
+				logc.Errorf(ctx, "RegionInterceptorMiddleware ip2region parse ip error: %s", err)
 				http.Error(w, "Unknown IP format", http.StatusNotImplemented)
 				return
 			}
